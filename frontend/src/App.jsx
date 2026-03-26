@@ -116,6 +116,15 @@ export default function GroceryApp() {
     const name = newPresetName.trim();
     if (!name) return;
     const names = items.map((i) => i.name);
+
+    const exists = Object.prototype.hasOwnProperty.call(presets, name);
+    if (exists) {
+      const shouldOverwrite = window.confirm(
+        'Ez a mentett lista már létezik. Felülírjuk?',
+      );
+      if (!shouldOverwrite) return;
+    }
+
     setPresets((prev) => ({ ...prev, [name]: names }));
     setNewPresetName('');
     setShowSavePreset(false);
