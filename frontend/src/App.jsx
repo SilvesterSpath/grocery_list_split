@@ -139,7 +139,11 @@ export default function GroceryApp() {
   };
 
   const clearBought = () => setItems((prev) => prev.filter((i) => !i.bought));
-  const clearAll = () => setItems([]);
+  const clearAll = () => {
+    const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
+    if (!shouldClear) return;
+    setItems([]);
+  };
 
   const handleDragStart = (e, id) => {
     setDragState(id);
