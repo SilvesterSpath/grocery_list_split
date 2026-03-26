@@ -192,6 +192,7 @@ export default function GroceryApp() {
             onCloseSavePreset={() => setShowSavePreset(false)}
             newPresetName={newPresetName}
             onNewPresetNameChange={setNewPresetName}
+            existingPresetNames={Object.keys(presets)}
             onSaveAsPreset={saveAsPreset}
             onClearBought={clearBought}
             onClearAll={clearAll}

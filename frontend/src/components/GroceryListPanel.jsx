@@ -16,6 +16,7 @@ export function GroceryListPanel({
   onCloseSavePreset,
   newPresetName,
   onNewPresetNameChange,
+  existingPresetNames,
   onSaveAsPreset,
   presetSaveErrorMessage,
   onClearBought,
@@ -82,6 +83,7 @@ export function GroceryListPanel({
         <SavePresetModal
           newPresetName={newPresetName}
           onNewPresetNameChange={onNewPresetNameChange}
+          existingPresetNames={existingPresetNames}
           onSave={onSaveAsPreset}
           onClose={onCloseSavePreset}
           errorMessage={presetSaveErrorMessage}
