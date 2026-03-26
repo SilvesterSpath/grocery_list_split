@@ -1,6 +1,13 @@
+import { useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
 
 export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
+  const [expandedPresets, setExpandedPresets] = useState({});
+
+  const toggleExpanded = (presetName) => {
+    setExpandedPresets((prev) => ({ ...prev, [presetName]: !prev[presetName] }));
+  };
+
   return (
     <div>
       <div style={styles.presetsHeader}>
@@ -43,15 +50,27 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
               </div>
             </div>
             <div style={styles.presetTags}>
-              {itemNames.slice(0, 8).map((n, i) => (
+              {(expandedPresets[name] ? itemNames : itemNames.slice(0, 8)).map(
+                (n, i) => (
                 <span key={i} style={styles.tag}>
                   {n}
                 </span>
-              ))}
+                ),
+              )}
               {itemNames.length > 8 && (
-                <span style={styles.tagMore}>
-                  +{itemNames.length - 8} more
-                </span>
+                <button
+                  type='button'
+                  style={{
+                    ...styles.tagMore,
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => toggleExpanded(name)}
+                >
+                  {expandedPresets[name]
+                    ? 'Kevesebb'
+                    : `+${itemNames.length - 8} more`}
+                </button>
               )}
             </div>
           </div>
