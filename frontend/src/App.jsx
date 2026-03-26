@@ -82,8 +82,34 @@ export default function GroceryApp() {
   const addFromPreset = (presetName) => {
     const presetItems = presets[presetName] || [];
     const newItems = presetItems.map(makeItem);
-    setItems((prev) => [...prev, ...newItems]);
-    setActiveTab('list');
+
+    if (items.length === 0) {
+      setItems(newItems);
+      setActiveTab('list');
+      return;
+    }
+
+    const input = window.prompt(
+      'A listád nem üres. Válassz műveletet: add (hozzáadás) vagy replace (csere).',
+      'add',
+    );
+
+    if (input === null) return;
+
+    const choice = input.trim().toLowerCase();
+    if (choice === 'add' || choice === 'a' || choice === 'hozzaad') {
+      setItems([...items, ...newItems]);
+      setActiveTab('list');
+      return;
+    }
+    if (choice === 'replace' || choice === 'r' || choice === 'csere') {
+      setItems(newItems);
+      setActiveTab('list');
+      return;
+    }
+
+    window.alert('Érvénytelen választás. A lista nem változott.');
+
   };
 
   const saveAsPreset = () => {
