@@ -90,7 +90,7 @@ export default function GroceryApp() {
     }
 
     const input = window.prompt(
-      'A listád nem üres. Válassz műveletet: add (hozzáadás) vagy replace (csere).',
+      'A listád nem üres. Válassz műveletet: add (hozzáadás) vagy replace (csere)!',
       'add',
     );
 
@@ -109,7 +109,6 @@ export default function GroceryApp() {
     }
 
     window.alert('Érvénytelen választás. A lista nem változott.');
-
   };
 
   const saveAsPreset = () => {
