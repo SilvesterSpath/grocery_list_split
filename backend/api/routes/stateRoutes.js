@@ -4,6 +4,19 @@ import Preset from '../models/Preset.js';
 
 const router = express.Router();
 
+function isValidItemShape(obj) {
+  return (
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj.id === 'string' &&
+    obj.id.trim() !== '' &&
+    typeof obj.name === 'string' &&
+    obj.name.trim() !== '' &&
+    typeof obj.needed === 'boolean' &&
+    typeof obj.bought === 'boolean'
+  );
+}
+
 function itemsFromLegacyNames(itemsNames) {
   if (!Array.isArray(itemsNames)) return [];
   return itemsNames
