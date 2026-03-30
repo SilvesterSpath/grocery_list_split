@@ -70,12 +70,14 @@ export default function GroceryApp() {
     const name = newItemName.trim();
     if (!name) return;
     setItems((prev) => [...prev, makeItem(name)]);
+    console.log('debug loadedPresetName clear from addItem');
     setLoadedPresetName('');
     setNewItemName('');
   };
 
   const deleteItem = (id) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
+    console.log('debug loadedPresetName clear from deleteItem');
     setLoadedPresetName('');
   };
 
@@ -98,6 +100,7 @@ export default function GroceryApp() {
     const name = editingName.trim();
     if (name) {
       setItems((prev) => prev.map((i) => (i.id === id ? { ...i, name } : i)));
+      console.log('debug loadedPresetName clear from commitEdit');
       setLoadedPresetName('');
     }
     setEditingId(null);
@@ -109,11 +112,15 @@ export default function GroceryApp() {
   };
 
   const addFromPreset = (presetName, mode) => {
+    console.log('debug addFromPreset called', { presetName, mode });
     const presetItems = presets[presetName] || [];
     const newItems = presetItems.map(makeItem);
 
     if (items.length === 0) {
       setItems(newItems);
+      console.log('debug loadedPresetName set from addFromPreset empty-list', {
+        presetName,
+      });
       setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
@@ -122,12 +129,18 @@ export default function GroceryApp() {
     const choice = (mode ?? '').trim().toLowerCase();
     if (choice === 'add') {
       setItems([...items, ...newItems]);
+      console.log('debug loadedPresetName set from addFromPreset add', {
+        presetName,
+      });
       setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
     }
     if (choice === 'replace') {
       setItems(newItems);
+      console.log('debug loadedPresetName set from addFromPreset replace', {
+        presetName,
+      });
       setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
@@ -193,12 +206,14 @@ export default function GroceryApp() {
 
   const clearBought = () => {
     setItems((prev) => prev.filter((i) => !i.bought));
+    console.log('debug loadedPresetName clear from clearBought');
     setLoadedPresetName('');
   };
   const clearAll = () => {
     const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
     if (!shouldClear) return;
     setItems([]);
+    console.log('debug loadedPresetName clear from clearAll');
     setLoadedPresetName('');
   };
 
@@ -222,6 +237,7 @@ export default function GroceryApp() {
       next.splice(toIdx, 0, moved);
       return next;
     });
+    console.log('debug loadedPresetName clear from handleDrop');
     setLoadedPresetName('');
     setDragState(null);
     setDragOver(null);
