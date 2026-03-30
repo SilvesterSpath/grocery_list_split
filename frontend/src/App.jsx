@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   createPreset,
+  deletePreset as deletePresetApi,
   getState,
   overwritePreset,
   putGlobal,
@@ -162,7 +163,19 @@ export default function GroceryApp() {
     setShowSavePreset(false);
   };
 
-  const deletePreset = (name) => {
+  const deletePreset = async (name) => {
+    const shouldDelete = window.confirm(
+      'Biztosan töröljük ezt a mentett listát?',
+    );
+    if (!shouldDelete) return;
+
+    try {
+      await deletePresetApi(name);
+    } catch (err) {
+      console.error('Failed to delete preset on API', err);
+      return;
+    }
+
     setPresets((prev) => {
       const next = { ...prev };
       delete next[name];
