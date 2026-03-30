@@ -8,7 +8,6 @@ import {
   loadState,
   loadTheme,
   makeItem,
-  saveState,
   saveTheme,
   translateKnownItemsInList,
   translateKnownPresets,
@@ -37,10 +36,6 @@ export default function GroceryApp() {
     document.documentElement.dataset.theme = theme;
     saveTheme(theme);
   }, [theme]);
-
-  useEffect(() => {
-    saveState({ items, presets });
-  }, [items, presets]);
 
   const addItem = () => {
     const name = newItemName.trim();

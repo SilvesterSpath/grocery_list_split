@@ -98,14 +98,6 @@ export function loadState() {
   return null;
 }
 
-export function saveState(state) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    /* ignore storage write failures */
-  }
-}
-
 export function loadTheme() {
   try {
     const raw = localStorage.getItem(THEME_KEY);
