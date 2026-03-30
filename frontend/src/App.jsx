@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { getState, overwritePreset, putGlobal } from './api/groceryApi.js';
+import {
+  createPreset,
+  getState,
+  overwritePreset,
+  putGlobal,
+} from './api/groceryApi.js';
 import { AppHeader } from './components/AppHeader.jsx';
 import { GroceryListPanel } from './components/GroceryListPanel.jsx';
 import { PresetsPanel } from './components/PresetsPanel.jsx';
@@ -144,6 +149,13 @@ export default function GroceryApp() {
         await overwritePreset(name, names);
       } catch (err) {
         console.error('Failed to overwrite preset on API', err);
+        return;
+      }
+    } else {
+      try {
+        await createPreset(name, names);
+      } catch (err) {
+        console.error('Failed to create preset on API', err);
         return;
       }
     }
