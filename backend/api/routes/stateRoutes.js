@@ -35,6 +35,7 @@ router.get('/state', async (req, res) => {
 
     res.json({ items, presets });
   } catch (error) {
+    console.error('GET /api/state failed:', error);
     res.status(500).json({ message: 'Failed to fetch state' });
   }
 });
