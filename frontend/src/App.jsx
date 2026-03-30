@@ -23,7 +23,9 @@ export default function GroceryApp() {
   const allowListAutoSave = useRef(false);
   const [theme, setTheme] = useState(loadTheme);
   const [items, setItems] = useState(() => []);
-  const [presets, setPresets] = useState(() => translateKnownPresets(defaultLists));
+  const [presets, setPresets] = useState(() =>
+    translateKnownPresets(defaultLists),
+  );
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [newItemName, setNewItemName] = useState('');
@@ -100,7 +102,7 @@ export default function GroceryApp() {
     if (e.key === 'Escape') setEditingId(null);
   };
 
-  const addFromPreset = (presetName) => {
+  const addFromPreset = (presetName, mode) => {
     const presetItems = presets[presetName] || [];
     const newItems = presetItems.map(makeItem);
 
@@ -110,26 +112,19 @@ export default function GroceryApp() {
       return;
     }
 
-    const input = window.prompt(
-      'A listád nem üres. Válassz műveletet: add (hozzáadás) vagy replace (csere)!',
-      'add',
-    );
-
-    if (input === null) return;
-
-    const choice = input.trim().toLowerCase();
-    if (choice === 'add' || choice === 'a' || choice === 'hozzaad') {
+    const choice = (mode ?? '').trim().toLowerCase();
+    if (choice === 'add') {
       setItems([...items, ...newItems]);
       setActiveTab('list');
       return;
     }
-    if (choice === 'replace' || choice === 'r' || choice === 'csere') {
+    if (choice === 'replace') {
       setItems(newItems);
       setActiveTab('list');
       return;
     }
 
-    window.alert('Érvénytelen választás. A lista nem változott.');
+    window.alert('Válassz műveletet: add vagy replace.');
   };
 
   const saveAsPreset = async () => {

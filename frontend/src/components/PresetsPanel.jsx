@@ -3,9 +3,29 @@ import { styles } from '../styles/groceryAppStyles.js';
 
 export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
   const [expandedPresets, setExpandedPresets] = useState({});
+  const [loadPresetName, setLoadPresetName] = useState(null);
+  const [loadMode, setLoadMode] = useState('add');
 
   const toggleExpanded = (presetName) => {
-    setExpandedPresets((prev) => ({ ...prev, [presetName]: !prev[presetName] }));
+    setExpandedPresets((prev) => ({
+      ...prev,
+      [presetName]: !prev[presetName],
+    }));
+  };
+
+  const openLoadModal = (presetName) => {
+    setLoadPresetName(presetName);
+    setLoadMode('add');
+  };
+
+  const closeLoadModal = () => {
+    setLoadPresetName(null);
+  };
+
+  const confirmLoad = () => {
+    if (!loadPresetName) return;
+    onAddFromPreset(loadPresetName, loadMode);
+    closeLoadModal();
   };
 
   return (
@@ -37,7 +57,7 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
               <div style={styles.presetCardActions}>
                 <button
                   style={styles.presetLoadBtn}
-                  onClick={() => onAddFromPreset(name)}
+                  onClick={() => openLoadModal(name)}
                 >
                   Betöltés a listába
                 </button>
@@ -52,9 +72,9 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
             <div style={styles.presetTags}>
               {(expandedPresets[name] ? itemNames : itemNames.slice(0, 8)).map(
                 (n, i) => (
-                <span key={i} style={styles.tag}>
-                  {n}
-                </span>
+                  <span key={i} style={styles.tag}>
+                    {n}
+                  </span>
                 ),
               )}
               {itemNames.length > 8 && (
@@ -75,6 +95,30 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
             </div>
           </div>
         ))
+      )}
+
+      {loadPresetName && (
+        <div style={styles.modalOverlay} onClick={closeLoadModal}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalTitle}>Betöltés a listába</div>
+            <select
+              style={styles.modalInput}
+              value={loadMode}
+              onChange={(e) => setLoadMode(e.target.value)}
+            >
+              <option value='add'>add (hozzáadás)</option>
+              <option value='replace'>replace (csere)</option>
+            </select>
+            <div style={styles.modalBtns}>
+              <button style={styles.modalCancel} onClick={closeLoadModal}>
+                Mégse
+              </button>
+              <button style={styles.modalSave} onClick={confirmLoad}>
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
