@@ -11,7 +11,6 @@ import { PresetsPanel } from './components/PresetsPanel.jsx';
 import { defaultLists } from './data/data.js';
 import { globalCSS, styles } from './styles/groceryAppStyles.js';
 import {
-  loadState,
   loadTheme,
   makeItem,
   saveTheme,
@@ -23,10 +22,7 @@ export default function GroceryApp() {
   const allowListAutoSave = useRef(false);
   const [theme, setTheme] = useState(loadTheme);
   const [items, setItems] = useState(() => []);
-  const [presets, setPresets] = useState(() => {
-    const saved = loadState();
-    return translateKnownPresets(saved?.presets ?? defaultLists);
-  });
+  const [presets, setPresets] = useState(() => translateKnownPresets(defaultLists));
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [newItemName, setNewItemName] = useState('');
@@ -45,9 +41,10 @@ export default function GroceryApp() {
     let cancelled = false;
     (async () => {
       try {
-        const { items: apiItems } = await getState();
+        const { items: apiItems, presets: apiPresets } = await getState();
         if (cancelled) return;
         setItems(translateKnownItemsInList(apiItems ?? []));
+        setPresets(translateKnownPresets(apiPresets ?? defaultLists));
         allowListAutoSave.current = true;
       } catch (err) {
         console.error('Failed to load grocery list from API', err);
