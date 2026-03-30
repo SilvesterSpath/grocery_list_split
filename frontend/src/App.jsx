@@ -31,6 +31,7 @@ export default function GroceryApp() {
   const [newItemName, setNewItemName] = useState('');
   const [showSavePreset, setShowSavePreset] = useState(false);
   const [newPresetName, setNewPresetName] = useState('');
+  const [loadedPresetName, setLoadedPresetName] = useState('');
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [activeTab, setActiveTab] = useState('list');
@@ -69,11 +70,14 @@ export default function GroceryApp() {
     const name = newItemName.trim();
     if (!name) return;
     setItems((prev) => [...prev, makeItem(name)]);
+    setLoadedPresetName('');
     setNewItemName('');
   };
 
-  const deleteItem = (id) =>
+  const deleteItem = (id) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
+    setLoadedPresetName('');
+  };
 
   const toggleNeeded = (id) =>
     setItems((prev) =>
@@ -92,8 +96,10 @@ export default function GroceryApp() {
 
   const commitEdit = (id) => {
     const name = editingName.trim();
-    if (name)
+    if (name) {
       setItems((prev) => prev.map((i) => (i.id === id ? { ...i, name } : i)));
+      setLoadedPresetName('');
+    }
     setEditingId(null);
   };
 
@@ -108,6 +114,7 @@ export default function GroceryApp() {
 
     if (items.length === 0) {
       setItems(newItems);
+      setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
     }
@@ -115,11 +122,13 @@ export default function GroceryApp() {
     const choice = (mode ?? '').trim().toLowerCase();
     if (choice === 'add') {
       setItems([...items, ...newItems]);
+      setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
     }
     if (choice === 'replace') {
       setItems(newItems);
+      setLoadedPresetName(presetName);
       setActiveTab('list');
       return;
     }
@@ -182,11 +191,15 @@ export default function GroceryApp() {
     });
   };
 
-  const clearBought = () => setItems((prev) => prev.filter((i) => !i.bought));
+  const clearBought = () => {
+    setItems((prev) => prev.filter((i) => !i.bought));
+    setLoadedPresetName('');
+  };
   const clearAll = () => {
     const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
     if (!shouldClear) return;
     setItems([]);
+    setLoadedPresetName('');
   };
 
   const handleDragStart = (e, id) => {
@@ -209,6 +222,7 @@ export default function GroceryApp() {
       next.splice(toIdx, 0, moved);
       return next;
     });
+    setLoadedPresetName('');
     setDragState(null);
     setDragOver(null);
   };
@@ -253,6 +267,7 @@ export default function GroceryApp() {
             onSaveAsPreset={saveAsPreset}
             onClearBought={clearBought}
             onClearAll={clearAll}
+            loadedPresetName={loadedPresetName}
             editingId={editingId}
             editingName={editingName}
             setEditingName={setEditingName}

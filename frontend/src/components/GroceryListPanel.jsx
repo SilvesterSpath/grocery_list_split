@@ -21,6 +21,7 @@ export function GroceryListPanel({
   presetSaveErrorMessage,
   onClearBought,
   onClearAll,
+  loadedPresetName,
   editingId,
   editingName,
   setEditingName,
@@ -122,6 +123,7 @@ export function GroceryListPanel({
               <div style={styles.sectionLabel}>
                 <span style={styles.sectionDot({ color: '#22c55e' })} />
                 Megvenni ({neededItems.length})
+                {loadedPresetName ? ` - ${loadedPresetName}` : ''}
               </div>
               {neededItems.map((item) => (
                 <ItemRow
