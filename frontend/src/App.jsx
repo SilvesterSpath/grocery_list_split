@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getState, overwritePreset, putGlobal } from './api/groceryApi.js';
 import { AppHeader } from './components/AppHeader.jsx';
 import { GroceryListPanel } from './components/GroceryListPanel.jsx';
 import { PresetsPanel } from './components/PresetsPanel.jsx';
@@ -14,11 +15,9 @@ import {
 } from './utils/groceryHelpers.js';
 
 export default function GroceryApp() {
+  const allowListAutoSave = useRef(false);
   const [theme, setTheme] = useState(loadTheme);
-  const [items, setItems] = useState(() => {
-    const saved = loadState();
-    return translateKnownItemsInList(saved?.items ?? []);
-  });
+  const [items, setItems] = useState(() => []);
   const [presets, setPresets] = useState(() => {
     const saved = loadState();
     return translateKnownPresets(saved?.presets ?? defaultLists);
@@ -36,6 +35,30 @@ export default function GroceryApp() {
     document.documentElement.dataset.theme = theme;
     saveTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { items: apiItems } = await getState();
+        if (cancelled) return;
+        setItems(translateKnownItemsInList(apiItems ?? []));
+        allowListAutoSave.current = true;
+      } catch (err) {
+        console.error('Failed to load grocery list from API', err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!allowListAutoSave.current) return;
+    putGlobal(items).catch((err) => {
+      console.error('Failed to save grocery list to API', err);
+    });
+  }, [items]);
 
   const addItem = () => {
     const name = newItemName.trim();
@@ -106,7 +129,7 @@ export default function GroceryApp() {
     window.alert('Érvénytelen választás. A lista nem változott.');
   };
 
-  const saveAsPreset = () => {
+  const saveAsPreset = async () => {
     const name = newPresetName.trim();
     if (!name) return;
     const names = items.map((i) => i.name);
@@ -117,6 +140,12 @@ export default function GroceryApp() {
         'Ez a mentett lista már létezik. Felülírjuk?',
       );
       if (!shouldOverwrite) return;
+      try {
+        await overwritePreset(name, names);
+      } catch (err) {
+        console.error('Failed to overwrite preset on API', err);
+        return;
+      }
     }
 
     setPresets((prev) => ({ ...prev, [name]: names }));
