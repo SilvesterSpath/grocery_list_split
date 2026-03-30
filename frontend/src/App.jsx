@@ -153,7 +153,11 @@ export default function GroceryApp() {
       }
     }
 
-    setPresets((prev) => ({ ...prev, [name]: names }));
+    setPresets((prev) => {
+      const next = { ...prev };
+      delete next[name];
+      return { [name]: names, ...next };
+    });
     setNewPresetName('');
     setShowSavePreset(false);
   };
