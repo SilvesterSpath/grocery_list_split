@@ -3,31 +3,44 @@ import GlobalState from '../models/GlobalState.js';
 
 const router = express.Router();
 
-function isStringArray(value) {
+function isValidItem(obj) {
   return (
-    Array.isArray(value) && value.every((v) => typeof v === 'string' && v.trim() !== '')
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj.id === 'string' &&
+    obj.id.trim() !== '' &&
+    typeof obj.name === 'string' &&
+    obj.name.trim() !== '' &&
+    typeof obj.needed === 'boolean' &&
+    typeof obj.bought === 'boolean'
   );
+}
+
+function isValidItemsArray(value) {
+  return Array.isArray(value) && value.every(isValidItem);
 }
 
 router.put('/global', async (req, res) => {
   try {
-    const { itemsNames } = req.body ?? {};
+    const { items } = req.body ?? {};
 
-    if (!isStringArray(itemsNames)) {
-      return res.status(400).json({ message: 'itemsNames must be a non-empty string[]' });
+    if (!isValidItemsArray(items)) {
+      return res.status(400).json({
+        message:
+          'items must be an array (possibly empty) of { id, name, needed, bought }',
+      });
     }
 
     const updated = await GlobalState.findByIdAndUpdate(
       'global',
-      { $set: { itemsNames } },
+      { $set: { items } },
       { upsert: true, new: true },
     ).lean();
 
-    res.json({ itemsNames: updated.itemsNames ?? [] });
+    res.json({ items: updated.items ?? [] });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update global state' });
   }
 });
 
 export default router;
-

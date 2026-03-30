@@ -43,10 +43,10 @@ export async function getState() {
   return requestJSON(toUrl('/api/state'));
 }
 
-export async function putGlobal(itemsNames) {
+export async function putGlobal(items) {
   return requestJSON(toUrl('/api/global'), {
     method: 'PUT',
-    body: { itemsNames },
+    body: { items },
   });
 }
 

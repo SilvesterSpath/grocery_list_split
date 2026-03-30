@@ -6,7 +6,7 @@ export default async function seedDefaultsIfEmpty() {
   // Global list starts empty by default; we only seed presets.
   await GlobalState.updateOne(
     { _id: 'global' },
-    { $setOnInsert: { itemsNames: [] } },
+    { $setOnInsert: { items: [] } },
     { upsert: true },
   );
 
