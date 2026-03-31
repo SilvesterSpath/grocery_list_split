@@ -20,7 +20,7 @@ export function PresetsPanel({
 
   const openLoadModal = (presetName) => {
     setLoadPresetName(presetName);
-    setLoadMode('add');
+    setLoadMode('replace');
   };
 
   const requestLoadPreset = (presetName) => {
@@ -119,8 +119,8 @@ export function PresetsPanel({
               value={loadMode}
               onChange={(e) => setLoadMode(e.target.value)}
             >
-              <option value='add'>add (hozzáadás)</option>
               <option value='replace'>replace (csere)</option>
+              <option value='add'>add (hozzáadás)</option>
             </select>
             <div style={styles.modalBtns}>
               <button style={styles.modalCancel} onClick={closeLoadModal}>
