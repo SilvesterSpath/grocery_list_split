@@ -30,8 +30,9 @@ export default function GroceryApp() {
   const [editingName, setEditingName] = useState('');
   const [newItemName, setNewItemName] = useState('');
   const [showSavePreset, setShowSavePreset] = useState(false);
-  const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
+  const [saveMode, setSaveMode] = useState('new');
   const [newPresetName, setNewPresetName] = useState('');
+  const [presetSaveErrorMessage, setPresetSaveErrorMessage] = useState('');
   const [loadedPresetName, setLoadedPresetName] = useState('');
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
@@ -147,51 +148,50 @@ export default function GroceryApp() {
   };
 
   const handleOpenSavePreset = () => {
-    if (loadedPresetName && loadedPresetName.trim() !== '') {
-      setShowOverwriteConfirm(true);
-      return;
-    }
-    setShowSavePreset(true);
-  };
-
-  const handleConfirmOverwrite = async () => {
-    const activePresetName = loadedPresetName.trim();
-    if (!activePresetName) {
-      setShowOverwriteConfirm(false);
-      setShowSavePreset(true);
-      return;
-    }
-
-    try {
-      const names = items.map((i) => i.name);
-      await overwritePreset(activePresetName, names);
-      setShowOverwriteConfirm(false);
-    } catch (err) {
-      console.error('Failed to overwrite active preset on API', err);
-      window.alert('Nem sikerült felülírni a listát. Próbáld újra.');
-    }
-  };
-
-  const handleDeclineOverwrite = () => {
-    setShowOverwriteConfirm(false);
+    const hasActivePreset = loadedPresetName.trim() !== '';
+    setSaveMode(hasActivePreset ? 'overwrite' : 'new');
+    setPresetSaveErrorMessage('');
+    setNewPresetName('');
     setShowSavePreset(true);
   };
 
   const saveAsPreset = async () => {
-    const name = newPresetName.trim();
-    if (!name) return;
     const names = items.map((i) => i.name);
+    const activePresetName = loadedPresetName.trim();
+    const canOverwriteActive = activePresetName !== '';
+
+    if (saveMode === 'overwrite' && canOverwriteActive) {
+      try {
+        await overwritePreset(activePresetName, names);
+      } catch (err) {
+        console.error('Failed to overwrite active preset on API', err);
+        setPresetSaveErrorMessage('Nem sikerült felülírni a listát.');
+        return;
+      }
+
+      setPresets((prev) => {
+        const next = { ...prev };
+        delete next[activePresetName];
+        return { [activePresetName]: names, ...next };
+      });
+      setPresetSaveErrorMessage('');
+      setShowSavePreset(false);
+      return;
+    }
+
+    const name = newPresetName.trim();
+    if (!name) {
+      setPresetSaveErrorMessage('Adj meg egy lista nevet.');
+      return;
+    }
 
     const exists = Object.prototype.hasOwnProperty.call(presets, name);
     if (exists) {
-      const shouldOverwrite = window.confirm(
-        'Ez a mentett lista már létezik. Felülírjuk?',
-      );
-      if (!shouldOverwrite) return;
       try {
         await overwritePreset(name, names);
       } catch (err) {
         console.error('Failed to overwrite preset on API', err);
+        setPresetSaveErrorMessage('Nem sikerült felülírni a listát.');
         return;
       }
     } else {
@@ -199,6 +199,7 @@ export default function GroceryApp() {
         await createPreset(name, names);
       } catch (err) {
         console.error('Failed to create preset on API', err);
+        setPresetSaveErrorMessage('Nem sikerült menteni az új listát.');
         return;
       }
     }
@@ -208,6 +209,8 @@ export default function GroceryApp() {
       delete next[name];
       return { [name]: names, ...next };
     });
+    setLoadedPresetName(name);
+    setPresetSaveErrorMessage('');
     setNewPresetName('');
     setShowSavePreset(false);
   };
@@ -304,11 +307,18 @@ export default function GroceryApp() {
             onAddItem={addItem}
             showSavePreset={showSavePreset}
             onOpenSavePreset={handleOpenSavePreset}
-            onCloseSavePreset={() => setShowSavePreset(false)}
+            onCloseSavePreset={() => {
+              setShowSavePreset(false);
+              setPresetSaveErrorMessage('');
+            }}
             newPresetName={newPresetName}
             onNewPresetNameChange={setNewPresetName}
             existingPresetNames={Object.keys(presets)}
             onSaveAsPreset={saveAsPreset}
+            saveMode={saveMode}
+            onSaveModeChange={setSaveMode}
+            activePresetName={loadedPresetName}
+            presetSaveErrorMessage={presetSaveErrorMessage}
             onClearBought={clearBought}
             onClearAll={clearAll}
             loadedPresetName={loadedPresetName}
@@ -340,24 +350,6 @@ export default function GroceryApp() {
         )}
       </main>
 
-      {showOverwriteConfirm && (
-        <div style={styles.modalOverlay} onClick={handleDeclineOverwrite}>
-          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalTitle}>Felülírjuk?</div>
-            <div style={{ marginBottom: 12, color: 'var(--muted)' }}>
-              {loadedPresetName}
-            </div>
-            <div style={styles.modalBtns}>
-              <button style={styles.modalCancel} onClick={handleDeclineOverwrite}>
-                Nem
-              </button>
-              <button style={styles.modalSave} onClick={handleConfirmOverwrite}>
-                Igen
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -18,6 +18,9 @@ export function GroceryListPanel({
   onNewPresetNameChange,
   existingPresetNames,
   onSaveAsPreset,
+  saveMode,
+  onSaveModeChange,
+  activePresetName,
   presetSaveErrorMessage,
   onClearBought,
   onClearAll,
@@ -85,6 +88,9 @@ export function GroceryListPanel({
           newPresetName={newPresetName}
           onNewPresetNameChange={onNewPresetNameChange}
           existingPresetNames={existingPresetNames}
+          saveMode={saveMode}
+          onSaveModeChange={onSaveModeChange}
+          activePresetName={activePresetName}
           onSave={onSaveAsPreset}
           onClose={onCloseSavePreset}
           errorMessage={presetSaveErrorMessage}

@@ -4,10 +4,15 @@ export function SavePresetModal({
   newPresetName,
   onNewPresetNameChange,
   existingPresetNames = [],
+  saveMode,
+  onSaveModeChange,
+  activePresetName,
   onSave,
   onClose,
   errorMessage,
 }) {
+  const hasActivePresetName = typeof activePresetName === 'string' && activePresetName.trim() !== '';
+  const canEditName = !hasActivePresetName || saveMode === 'new';
   const sortedNames = [...existingPresetNames].sort((a, b) =>
     a.localeCompare(b, 'hu'),
   );
@@ -20,12 +25,42 @@ export function SavePresetModal({
     <div style={styles.modalOverlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div style={styles.modalTitle}>Aktuális lista mentése</div>
+        {hasActivePresetName && (
+          <>
+            <div style={{ marginBottom: 8, color: 'var(--muted)' }}>
+              Aktuális lista: <strong>{activePresetName}</strong>
+            </div>
+            <div style={{ marginBottom: 12, display: 'grid', gap: 6 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type='radio'
+                  name='save-mode'
+                  value='overwrite'
+                  checked={saveMode === 'overwrite'}
+                  onChange={() => onSaveModeChange('overwrite')}
+                />
+                Felülírás
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type='radio'
+                  name='save-mode'
+                  value='new'
+                  checked={saveMode === 'new'}
+                  onChange={() => onSaveModeChange('new')}
+                />
+                Mentés új néven
+              </label>
+            </div>
+          </>
+        )}
         <input
           style={styles.modalInput}
           autoFocus
           list='preset-name-suggestions'
           placeholder='Lista neve…'
           value={newPresetName}
+          disabled={!canEditName}
           onChange={(e) => onNewPresetNameChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') onSave();
