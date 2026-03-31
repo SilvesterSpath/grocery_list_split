@@ -70,15 +70,11 @@ export default function GroceryApp() {
     const name = newItemName.trim();
     if (!name) return;
     setItems((prev) => [...prev, makeItem(name)]);
-    console.log('debug loadedPresetName clear from addItem');
-    setLoadedPresetName('');
     setNewItemName('');
   };
 
   const deleteItem = (id) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
-    console.log('debug loadedPresetName clear from deleteItem');
-    setLoadedPresetName('');
   };
 
   const toggleNeeded = (id) =>
