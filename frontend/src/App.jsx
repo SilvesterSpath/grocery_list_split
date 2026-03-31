@@ -30,6 +30,7 @@ export default function GroceryApp() {
   const [editingName, setEditingName] = useState('');
   const [newItemName, setNewItemName] = useState('');
   const [showSavePreset, setShowSavePreset] = useState(false);
+  const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
   const [newPresetName, setNewPresetName] = useState('');
   const [loadedPresetName, setLoadedPresetName] = useState('');
   const [dragState, setDragState] = useState(null);
@@ -143,6 +144,37 @@ export default function GroceryApp() {
     }
 
     window.alert('Válassz műveletet: add vagy replace.');
+  };
+
+  const handleOpenSavePreset = () => {
+    if (loadedPresetName && loadedPresetName.trim() !== '') {
+      setShowOverwriteConfirm(true);
+      return;
+    }
+    setShowSavePreset(true);
+  };
+
+  const handleConfirmOverwrite = async () => {
+    const activePresetName = loadedPresetName.trim();
+    if (!activePresetName) {
+      setShowOverwriteConfirm(false);
+      setShowSavePreset(true);
+      return;
+    }
+
+    try {
+      const names = items.map((i) => i.name);
+      await overwritePreset(activePresetName, names);
+      setShowOverwriteConfirm(false);
+    } catch (err) {
+      console.error('Failed to overwrite active preset on API', err);
+      window.alert('Nem sikerült felülírni a listát. Próbáld újra.');
+    }
+  };
+
+  const handleDeclineOverwrite = () => {
+    setShowOverwriteConfirm(false);
+    setShowSavePreset(true);
   };
 
   const saveAsPreset = async () => {
@@ -271,7 +303,7 @@ export default function GroceryApp() {
             onNewItemNameChange={setNewItemName}
             onAddItem={addItem}
             showSavePreset={showSavePreset}
-            onOpenSavePreset={() => setShowSavePreset(true)}
+            onOpenSavePreset={handleOpenSavePreset}
             onCloseSavePreset={() => setShowSavePreset(false)}
             newPresetName={newPresetName}
             onNewPresetNameChange={setNewPresetName}
@@ -307,6 +339,25 @@ export default function GroceryApp() {
           />
         )}
       </main>
+
+      {showOverwriteConfirm && (
+        <div style={styles.modalOverlay} onClick={handleDeclineOverwrite}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalTitle}>Felülírjuk?</div>
+            <div style={{ marginBottom: 12, color: 'var(--muted)' }}>
+              {loadedPresetName}
+            </div>
+            <div style={styles.modalBtns}>
+              <button style={styles.modalCancel} onClick={handleDeclineOverwrite}>
+                Nem
+              </button>
+              <button style={styles.modalSave} onClick={handleConfirmOverwrite}>
+                Igen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
