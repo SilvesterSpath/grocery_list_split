@@ -305,6 +305,7 @@ export default function GroceryApp() {
         {activeTab === 'presets' && (
           <PresetsPanel
             presets={presets}
+            mainListItemCount={items.length}
             onAddFromPreset={addFromPreset}
             onDeletePreset={deletePreset}
           />

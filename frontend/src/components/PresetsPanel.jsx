@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
 
-export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
+export function PresetsPanel({
+  presets,
+  onAddFromPreset,
+  onDeletePreset,
+  mainListItemCount,
+}) {
   const [expandedPresets, setExpandedPresets] = useState({});
   const [loadPresetName, setLoadPresetName] = useState(null);
   const [loadMode, setLoadMode] = useState('add');
@@ -16,6 +21,14 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
   const openLoadModal = (presetName) => {
     setLoadPresetName(presetName);
     setLoadMode('add');
+  };
+
+  const requestLoadPreset = (presetName) => {
+    if (mainListItemCount === 0) {
+      onAddFromPreset(presetName, 'replace');
+      return;
+    }
+    openLoadModal(presetName);
   };
 
   const closeLoadModal = () => {
@@ -57,7 +70,7 @@ export function PresetsPanel({ presets, onAddFromPreset, onDeletePreset }) {
               <div style={styles.presetCardActions}>
                 <button
                   style={styles.presetLoadBtn}
-                  onClick={() => openLoadModal(name)}
+                  onClick={() => requestLoadPreset(name)}
                 >
                   Betöltés a listába
                 </button>
