@@ -72,7 +72,7 @@ export function PresetsPanel({
                   style={styles.presetLoadBtn}
                   onClick={() => requestLoadPreset(name)}
                 >
-                  Betöltés a listába
+                  Betöltés
                 </button>
                 <button
                   style={styles.presetDeleteBtn}
@@ -113,7 +113,7 @@ export function PresetsPanel({
       {loadPresetName && (
         <div style={styles.modalOverlay} onClick={closeLoadModal}>
           <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalTitle}>Betöltés a listába</div>
+            <div style={styles.modalTitle}>Betöltés</div>
             <select
               style={styles.modalInput}
               value={loadMode}
