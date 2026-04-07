@@ -366,6 +366,7 @@ export const styles = {
 
   itemName: {
     flex: 1,
+    minWidth: 220,
     fontSize: 21,
     fontWeight: 500,
     color: 'var(--text)',
@@ -385,6 +386,7 @@ export const styles = {
 
   editInput: {
     flex: 1,
+    minWidth: 220,
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 14,
     fontWeight: 500,
