@@ -85,9 +85,27 @@ export default function GroceryApp() {
     );
 
   const toggleBought = (id) =>
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, bought: !i.bought } : i)),
-    );
+    setItems((prev) => {
+      const idx = prev.findIndex((i) => i.id === id);
+      if (idx === -1) return prev;
+
+      const current = prev[idx];
+      const nextItem = { ...current, bought: !current.bought };
+
+      const without = [...prev.slice(0, idx), ...prev.slice(idx + 1)];
+
+      // When an item is checked (put in basket), move it to the bottom.
+      if (nextItem.bought) return [...without, nextItem];
+
+      // When unchecked, move it back above bought items.
+      const firstBoughtIdx = without.findIndex((i) => i.bought);
+      if (firstBoughtIdx === -1) return [...without, nextItem];
+      return [
+        ...without.slice(0, firstBoughtIdx),
+        nextItem,
+        ...without.slice(firstBoughtIdx),
+      ];
+    });
 
   const startEdit = (item) => {
     setEditingId(item.id);
@@ -349,7 +367,6 @@ export default function GroceryApp() {
           />
         )}
       </main>
-
     </div>
   );
 }
