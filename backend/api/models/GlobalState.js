@@ -21,6 +21,10 @@ const GlobalStateSchema = new mongoose.Schema(
       type: [ListItemSchema],
       default: [],
     },
+    activePresetName: {
+      type: String,
+      default: '',
+    },
     itemsNames: {
       type: [String],
     },

@@ -39,6 +39,10 @@ router.get('/state', async (req, res) => {
   try {
     const globalDoc = await GlobalState.findById('global').lean();
     const items = resolveItems(globalDoc);
+    const activePresetName =
+      typeof globalDoc?.activePresetName === 'string'
+        ? globalDoc.activePresetName
+        : '';
 
     const presetDocs = await Preset.find({}).sort({ name: 1 }).lean();
     const presets = {};
@@ -46,7 +50,7 @@ router.get('/state', async (req, res) => {
       presets[p.name] = p.itemsNames ?? [];
     }
 
-    res.json({ items, presets });
+    res.json({ items, presets, activePresetName });
   } catch (error) {
     console.error('GET /api/state failed:', error);
     res.status(500).json({ message: 'Failed to fetch state' });

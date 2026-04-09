@@ -43,10 +43,13 @@ export async function getState() {
   return requestJSON(toUrl('/api/state'));
 }
 
-export async function putGlobal(items) {
+export async function putGlobal(items, activePresetName) {
   return requestJSON(toUrl('/api/global'), {
     method: 'PUT',
-    body: { items },
+    body: {
+      items,
+      activePresetName,
+    },
   });
 }
 

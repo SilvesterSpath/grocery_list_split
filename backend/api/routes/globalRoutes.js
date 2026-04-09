@@ -22,7 +22,7 @@ function isValidItemsArray(value) {
 
 router.put('/global', async (req, res) => {
   try {
-    const { items } = req.body ?? {};
+    const { items, activePresetName } = req.body ?? {};
 
     if (!isValidItemsArray(items)) {
       return res.status(400).json({
@@ -31,13 +31,35 @@ router.put('/global', async (req, res) => {
       });
     }
 
+    if (
+      typeof activePresetName !== 'undefined' &&
+      typeof activePresetName !== 'string'
+    ) {
+      return res.status(400).json({
+        message: 'activePresetName must be a string (or omitted)',
+      });
+    }
+
+    const normalizedActivePresetName =
+      typeof activePresetName === 'string' ? activePresetName.trim() : undefined;
+
     const updated = await GlobalState.findByIdAndUpdate(
       'global',
-      { $set: { items } },
+      {
+        $set: {
+          items,
+          ...(typeof normalizedActivePresetName === 'string'
+            ? { activePresetName: normalizedActivePresetName }
+            : {}),
+        },
+      },
       { upsert: true, new: true },
     ).lean();
 
-    res.json({ items: updated.items ?? [] });
+    res.json({
+      items: updated.items ?? [],
+      activePresetName: updated.activePresetName ?? '',
+    });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update global state' });
   }

@@ -66,7 +66,11 @@ export default function GroceryApp() {
     (async () => {
       try {
         hydrationTrace('hydration_getState_before');
-        const { items: apiItems, presets: apiPresets } = await getState();
+        const {
+          items: apiItems,
+          presets: apiPresets,
+          activePresetName,
+        } = await getState();
         hydrationTrace('hydration_getState_after');
         if (cancelled) {
           hydrationTrace('hydration_skipped_cancelled');
@@ -83,6 +87,9 @@ export default function GroceryApp() {
         });
         setItems(translateKnownItemsInList(apiItems ?? []));
         setPresets(translateKnownPresets(apiPresets ?? defaultLists));
+        setLoadedPresetName(
+          typeof activePresetName === 'string' ? activePresetName : '',
+        );
         allowListAutoSave.current = true;
         hydrationTrace('hydration_apply_remote_after', {
           itemCount,
@@ -111,10 +118,10 @@ export default function GroceryApp() {
       return;
     }
     hydrationTrace('autosave_putGlobal_call', { itemsLen: items.length });
-    putGlobal(items).catch((err) => {
+    putGlobal(items, loadedPresetName).catch((err) => {
       console.error('Failed to save grocery list to API', err);
     });
-  }, [items]);
+  }, [items, loadedPresetName]);
 
   const addItem = () => {
     const name = newItemName.trim();
@@ -164,8 +171,6 @@ export default function GroceryApp() {
     const name = editingName.trim();
     if (name) {
       setItems((prev) => prev.map((i) => (i.id === id ? { ...i, name } : i)));
-      console.log('debug loadedPresetName clear from commitEdit');
-      setLoadedPresetName('');
     }
     setEditingId(null);
   };
@@ -334,8 +339,6 @@ export default function GroceryApp() {
       next.splice(toIdx, 0, moved);
       return next;
     });
-    console.log('debug loadedPresetName clear from handleDrop');
-    setLoadedPresetName('');
     setDragState(null);
     setDragOver(null);
   };
