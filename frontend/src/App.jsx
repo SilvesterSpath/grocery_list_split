@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   createPreset,
   deletePreset as deletePresetApi,
@@ -19,19 +19,6 @@ import {
   translateKnownPresets,
 } from './utils/groceryHelpers.js';
 
-/** TEMP: remove [HYDRATION_TRACE] block when done debugging */
-function hydrationTrace(event, extra = {}) {
-  const perfNow =
-    typeof globalThis.performance !== 'undefined'
-      ? globalThis.performance.now()
-      : null;
-  console.log('[HYDRATION_TRACE]', event, {
-    dateNow: Date.now(),
-    perfNow,
-    ...extra,
-  });
-}
-
 export default function GroceryApp() {
   const allowListAutoSave = useRef(false);
   const [theme, setTheme] = useState(loadTheme);
@@ -51,10 +38,6 @@ export default function GroceryApp() {
   const [dragOver, setDragOver] = useState(null);
   const [activeTab, setActiveTab] = useState('list');
 
-  useLayoutEffect(() => {
-    hydrationTrace('app_render_mount');
-  }, []);
-
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     saveTheme(theme);
@@ -62,62 +45,35 @@ export default function GroceryApp() {
 
   useEffect(() => {
     let cancelled = false;
-    hydrationTrace('hydration_effect_start');
     (async () => {
       try {
-        hydrationTrace('hydration_getState_before');
         const {
           items: apiItems,
           presets: apiPresets,
           activePresetName,
         } = await getState();
-        hydrationTrace('hydration_getState_after');
         if (cancelled) {
-          hydrationTrace('hydration_skipped_cancelled');
           return;
         }
-        const itemCount = (apiItems ?? []).length;
-        const presetCount =
-          apiPresets && typeof apiPresets === 'object'
-            ? Object.keys(apiPresets).length
-            : 0;
-        hydrationTrace('hydration_apply_remote_before', {
-          itemCount,
-          presetCount,
-        });
         setItems(translateKnownItemsInList(apiItems ?? []));
         setPresets(translateKnownPresets(apiPresets ?? defaultLists));
         setLoadedPresetName(
           typeof activePresetName === 'string' ? activePresetName : '',
         );
         allowListAutoSave.current = true;
-        hydrationTrace('hydration_apply_remote_after', {
-          itemCount,
-          presetCount,
-        });
       } catch (err) {
-        hydrationTrace('hydration_getState_error', {
-          message: err?.message ?? String(err),
-        });
         console.error('Failed to load grocery list from API', err);
       }
     })();
     return () => {
       cancelled = true;
-      hydrationTrace('hydration_effect_cleanup');
     };
   }, []);
 
   useEffect(() => {
-    hydrationTrace('autosave_effect_run', {
-      allowAuto: allowListAutoSave.current,
-      itemsLen: items.length,
-    });
     if (!allowListAutoSave.current) {
-      hydrationTrace('autosave_skip_allow_false', { itemsLen: items.length });
       return;
     }
-    hydrationTrace('autosave_putGlobal_call', { itemsLen: items.length });
     putGlobal(items, loadedPresetName).catch((err) => {
       console.error('Failed to save grocery list to API', err);
     });
