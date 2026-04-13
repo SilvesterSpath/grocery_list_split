@@ -646,4 +646,47 @@ export const styles = {
     color: '#fff',
     cursor: 'pointer',
   },
+
+  startupSyncOverlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(44,36,22,0.34)',
+    zIndex: 300,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+
+  startupSyncModal: {
+    background: 'var(--surface)',
+    borderRadius: 14,
+    padding: '18px 20px 16px',
+    width: '100%',
+    maxWidth: 280,
+    boxShadow: 'var(--shadow-strong)',
+    border: '1px solid var(--border)',
+    textAlign: 'center',
+  },
+
+  startupSyncGif: {
+    width: 120,
+    height: 120,
+    objectFit: 'contain',
+    display: 'block',
+    margin: '0 auto 8px',
+  },
+
+  startupSyncFallback: {
+    fontSize: 44,
+    lineHeight: 1,
+    marginBottom: 10,
+  },
+
+  startupSyncText: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 14,
+    fontWeight: 600,
+    color: 'var(--muted)',
+  },
 };

@@ -9,6 +9,7 @@ import {
 import { AppHeader } from './components/AppHeader.jsx';
 import { GroceryListPanel } from './components/GroceryListPanel.jsx';
 import { PresetsPanel } from './components/PresetsPanel.jsx';
+import { StartupSyncModal } from './components/StartupSyncModal.jsx';
 import { defaultLists } from './data/data.js';
 import { globalCSS, styles } from './styles/groceryAppStyles.js';
 import {
@@ -37,6 +38,7 @@ export default function GroceryApp() {
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [activeTab, setActiveTab] = useState('list');
+  const [isHydrating, setIsHydrating] = useState(true);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -61,8 +63,10 @@ export default function GroceryApp() {
           typeof activePresetName === 'string' ? activePresetName : '',
         );
         allowListAutoSave.current = true;
+        setIsHydrating(false);
       } catch (err) {
         console.error('Failed to load grocery list from API', err);
+        if (!cancelled) setIsHydrating(false);
       }
     })();
     return () => {
@@ -374,6 +378,8 @@ export default function GroceryApp() {
           />
         )}
       </main>
+
+      {isHydrating && <StartupSyncModal />}
     </div>
   );
 }
