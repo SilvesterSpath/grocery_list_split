@@ -22,7 +22,7 @@
     --drag-handle: color-mix(in srgb, var(--muted) 28%, var(--border));
     --row-border: color-mix(in srgb, var(--border) 78%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 94%, var(--bg));
-    --toggle-on: color-mix(in srgb, var(--muted) 36%, var(--surface-2));
+    --toggle-on: color-mix(in srgb, var(--muted) 46%, var(--surface-2));
   }
 
   :root[data-theme="dark"]{
@@ -47,7 +47,7 @@
     --drag-handle: color-mix(in srgb, var(--muted-2) 45%, var(--border));
     --row-border: color-mix(in srgb, var(--border) 88%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 96%, var(--bg));
-    --toggle-on: color-mix(in srgb, var(--muted-2) 42%, var(--surface-2));
+    --toggle-on: color-mix(in srgb, var(--muted-2) 54%, var(--surface-2));
   }
 
   .kamra-sr-only {
@@ -72,6 +72,48 @@
 
   button[role='menuitem']:hover {
     background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
+  }
+
+  .kamra-btn-save:hover {
+    background: color-mix(in srgb, var(--surface-2) 65%, var(--surface));
+    border-color: color-mix(in srgb, var(--border) 75%, var(--muted));
+    color: color-mix(in srgb, var(--text) 88%, var(--muted));
+  }
+
+  .kamra-btn-load:hover {
+    background: color-mix(in srgb, var(--surface-2) 45%, var(--surface));
+    color: color-mix(in srgb, var(--muted) 85%, var(--text));
+  }
+
+  .kamra-btn-list-menu:hover,
+  .kamra-row-menu-btn:hover {
+    background: color-mix(in srgb, var(--surface-2) 55%, var(--surface));
+    color: color-mix(in srgb, var(--muted) 82%, var(--text));
+  }
+
+  .kamra-btn-list-menu:active,
+  .kamra-row-menu-btn:active,
+  .kamra-btn-save:active,
+  .kamra-btn-load:active {
+    transform: translateY(1px);
+  }
+
+  .kamra-item-row:hover {
+    background: color-mix(in srgb, var(--row-surface) 82%, var(--surface-2))
+      !important;
+    border-color: color-mix(in srgb, var(--row-border) 70%, var(--muted-2))
+      !important;
+  }
+
+  .kamra-item-row:focus-within {
+    border-color: color-mix(in srgb, var(--accent) 26%, var(--row-border))
+      !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 45%, transparent)
+      !important;
+  }
+
+  .kamra-item-row:active {
+    transform: translateY(0.5px);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -155,7 +197,8 @@ export const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'transform 0.08s, background 0.15s, border-color 0.15s',
+    transition:
+      'transform 0.12s, background-color 0.15s, border-color 0.15s, color 0.15s',
   },
 
   themeIcon: {
@@ -183,7 +226,7 @@ export const styles = {
     background: 'var(--surface-2)',
     color: 'var(--muted)',
     fontSize: 11,
-    fontWeight: 600,
+    fontWeight: 500,
     padding: '3px 8px',
     borderRadius: 20,
   },
@@ -253,19 +296,20 @@ export const styles = {
 
   actionLoadGroup: {
     position: 'relative',
-    border: '1px solid var(--border)',
+    border: '1px solid color-mix(in srgb, var(--border) 88%, var(--surface-2))',
     borderRadius: 8,
-    background: 'var(--surface)',
+    background: 'color-mix(in srgb, var(--surface) 85%, var(--surface-2))',
     overflow: 'visible',
     padding: 0,
     gap: 0,
+    transition: 'background-color 0.15s, border-color 0.15s',
   },
 
   actionLoadBtn: {
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 12,
     fontWeight: 500,
-    color: 'var(--muted)',
+    color: 'color-mix(in srgb, var(--muted) 88%, var(--text))',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
@@ -276,6 +320,7 @@ export const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
+    transition: 'background-color 0.15s, color 0.15s, transform 0.12s',
   },
 
   actionLoadMenuBtn: {
@@ -283,10 +328,10 @@ export const styles = {
     fontSize: 18,
     fontWeight: 700,
     lineHeight: 1,
-    color: 'var(--muted)',
+    color: 'color-mix(in srgb, var(--muted) 80%, var(--text))',
     background: 'transparent',
     border: 'none',
-    borderLeft: '1px solid var(--border)',
+    borderLeft: '1px solid color-mix(in srgb, var(--border) 78%, var(--surface-2))',
     cursor: 'pointer',
     minWidth: 36,
     height: 36,
@@ -296,6 +341,7 @@ export const styles = {
     padding: 0,
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
+    transition: 'background-color 0.15s, color 0.15s, transform 0.12s',
   },
 
   actionBtnFull: {
@@ -320,6 +366,12 @@ export const styles = {
     transition: 'all 0.15s',
   },
 
+  actionBtnPrimary: {
+    background: 'color-mix(in srgb, var(--surface-2) 48%, var(--surface))',
+    color: 'color-mix(in srgb, var(--text) 88%, var(--muted))',
+    borderColor: 'color-mix(in srgb, var(--border) 72%, var(--muted))',
+  },
+
   dangerBtn: {
     color: 'var(--danger)',
     borderColor: 'var(--danger-border)',
@@ -337,9 +389,9 @@ export const styles = {
     marginTop: 4,
     minWidth: 160,
     background: 'var(--surface)',
-    border: '1px solid var(--border)',
+    border: '1px solid color-mix(in srgb, var(--border) 82%, var(--surface-2))',
     borderRadius: 10,
-    boxShadow: 'var(--shadow)',
+    boxShadow: '0 6px 18px color-mix(in srgb, var(--text) 10%, transparent)',
     zIndex: 70,
     overflow: 'hidden',
   },
@@ -355,6 +407,7 @@ export const styles = {
     border: 'none',
     color: 'var(--text)',
     cursor: 'pointer',
+    transition: 'background-color 0.15s, color 0.15s',
   },
 
   actionsMenuItemDanger: {
@@ -533,7 +586,7 @@ export const styles = {
 
   toggleOn: {
     background: 'var(--toggle-on)',
-    borderColor: 'color-mix(in srgb, var(--muted-2) 45%, var(--border))',
+    borderColor: 'color-mix(in srgb, var(--muted-2) 58%, var(--border))',
     justifyContent: 'flex-end',
   },
 
@@ -593,7 +646,7 @@ export const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'color 0.15s, background 0.15s',
+    transition: 'color 0.15s, background-color 0.15s, transform 0.12s',
   },
 
   rowMenuDropdown: {

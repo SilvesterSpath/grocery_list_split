@@ -81,6 +81,7 @@ export function ItemRow({
 
   return (
     <div
+      className='kamra-item-row'
       draggable
       onDragStart={(e) => onDragStart(e, item.id)}
       onDragOver={(e) => onDragOver(e, item.id)}
@@ -181,6 +182,7 @@ export function ItemRow({
 
       <div ref={menuWrapRef} style={styles.rowMenuWrap}>
         <button
+          className='kamra-row-menu-btn'
           ref={menuBtnRef}
           type='button'
           style={styles.rowMenuBtn}

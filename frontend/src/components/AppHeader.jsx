@@ -30,6 +30,7 @@ export function AppHeader({
             <span style={styles.totalBadge}>{itemCount} tétel</span>
           )}
           <button
+            className='kamra-theme-btn'
             type='button'
             style={styles.themeBtn}
             onClick={onToggleTheme}

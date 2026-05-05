@@ -97,8 +97,13 @@ export function GroceryListPanel({
       <div style={styles.actionsBlock}>
         <div style={styles.actionsRowSplit}>
           <button
+            className='kamra-btn-save'
             type='button'
-            style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
+            style={{
+              ...styles.ghostBtn,
+              ...styles.actionBtnHalf,
+              ...styles.actionBtnPrimary,
+            }}
             onClick={onOpenSavePreset}
           >
             💾 Mentés
@@ -108,6 +113,7 @@ export function GroceryListPanel({
             style={{ ...styles.actionLoadGroup, ...styles.actionBtnHalf }}
           >
             <button
+              className='kamra-btn-load'
               type='button'
               style={styles.actionLoadBtn}
               onClick={onOpenPresetOverlay}
@@ -115,6 +121,7 @@ export function GroceryListPanel({
               📂 Lista betöltése
             </button>
             <button
+              className='kamra-btn-list-menu'
               ref={actionsMenuBtnRef}
               type='button'
               aria-label='Lista műveletek'
