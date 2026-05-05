@@ -538,8 +538,8 @@ export const styles = {
   },
 
   toggleOff: {
-    background: 'color-mix(in srgb, var(--muted) 18%, var(--border))',
-    borderColor: 'color-mix(in srgb, var(--border) 68%, var(--surface))',
+    background: 'color-mix(in srgb, var(--muted) 12%, var(--border))',
+    borderColor: 'color-mix(in srgb, var(--border) 58%, var(--surface))',
     justifyContent: 'flex-start',
   },
 
