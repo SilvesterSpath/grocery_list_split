@@ -337,6 +337,7 @@ export default function GroceryApp() {
   const neededItems = items.filter((i) => i.needed);
   const haveItems = items.filter((i) => !i.needed);
   const boughtCount = items.filter((i) => i.bought).length;
+  const remainingNeededCount = neededItems.filter((i) => !i.bought).length;
 
   return (
     <div style={styles.root}>
@@ -346,7 +347,7 @@ export default function GroceryApp() {
         theme={theme}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         boughtCount={boughtCount}
-        itemCount={items.length}
+        itemCount={remainingNeededCount}
       />
 
       <main style={styles.main}>

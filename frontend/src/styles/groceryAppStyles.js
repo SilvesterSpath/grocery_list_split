@@ -173,6 +173,12 @@ export const styles = {
     border: '1px solid color-mix(in srgb, var(--success) 35%, var(--border))',
   },
 
+  badgeActiveList: {
+    background: 'color-mix(in srgb, var(--accent) 22%, var(--surface))',
+    color: 'color-mix(in srgb, var(--accent) 76%, var(--text))',
+    border: '1px solid color-mix(in srgb, var(--accent) 40%, var(--border))',
+  },
+
   totalBadge: {
     background: 'var(--surface-2)',
     color: 'var(--muted)',

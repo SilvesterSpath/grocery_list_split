@@ -16,6 +16,19 @@ export function AppHeader({
           <span style={styles.logoText}>Kamra</span>
         </div>
         <div style={styles.headerStats}>
+          {boughtCount > 0 && (
+            <span
+              style={{
+                ...styles.badge,
+                ...(itemCount > 0 ? styles.badgeActiveList : {}),
+              }}
+            >
+              {boughtCount} a kosárban
+            </span>
+          )}
+          {itemCount > 0 && (
+            <span style={styles.totalBadge}>{itemCount} tétel</span>
+          )}
           <button
             type='button'
             style={styles.themeBtn}
@@ -27,10 +40,6 @@ export function AppHeader({
               {theme === 'dark' ? '☀︎' : '☾'}
             </span>
           </button>
-          {boughtCount > 0 && (
-            <span style={styles.badge}>{boughtCount} a kosárban</span>
-          )}
-          <span style={styles.totalBadge}>{itemCount} tétel</span>
         </div>
       </div>
     </header>
