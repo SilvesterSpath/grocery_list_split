@@ -211,11 +211,36 @@ export const styles = {
     transition: 'background 0.15s, transform 0.1s',
   },
 
-  actionsRow: {
+  actionsBlock: {
     display: 'flex',
-    gap: 6,
+    flexDirection: 'column',
+    gap: 8,
     marginBottom: 12,
-    flexWrap: 'wrap',
+  },
+
+  actionsRowSplit: {
+    display: 'flex',
+    gap: 8,
+    width: '100%',
+  },
+
+  actionBtnHalf: {
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '10px 8px',
+    boxSizing: 'border-box',
+  },
+
+  actionBtnFull: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '10px 8px',
+    boxSizing: 'border-box',
   },
 
   ghostBtn: {
@@ -234,38 +259,6 @@ export const styles = {
   dangerBtn: {
     color: 'var(--danger)',
     borderColor: 'var(--danger-border)',
-  },
-
-  legend: {
-    display: 'flex',
-    gap: 14,
-    marginBottom: 12,
-    fontSize: 11,
-    color: 'var(--muted)',
-    flexWrap: 'wrap',
-  },
-
-  legendItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 5,
-  },
-
-  legendDot: ({ color }) => ({
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    background: color,
-    display: 'inline-block',
-  }),
-
-  legendCheck: {
-    width: 14,
-    height: 14,
-    border: '1.5px solid #6b7280',
-    borderRadius: 4,
-    display: 'inline-block',
-    background: '#fff',
   },
 
   section: {

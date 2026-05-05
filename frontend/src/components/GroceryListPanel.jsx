@@ -65,21 +65,34 @@ export function GroceryListPanel({
       </div>
 
       {items.length > 0 && (
-        <div style={styles.actionsRow}>
-          <button style={styles.ghostBtn} onClick={onOpenSavePreset}>
-            💾 Mentés listaként
-          </button>
-          {boughtCount > 0 && (
-            <button style={styles.ghostBtn} onClick={onClearBought}>
-              🧹 Megvett törlése
+        <div style={styles.actionsBlock}>
+          <div style={styles.actionsRowSplit}>
+            <button
+              type='button'
+              style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
+              onClick={onOpenSavePreset}
+            >
+              💾 Mentés listaként
             </button>
+            <button
+              type='button'
+              style={{ ...styles.ghostBtn, ...styles.dangerBtn, ...styles.actionBtnHalf }}
+              onClick={onClearAll}
+            >
+              🗑 Mind törlése
+            </button>
+          </div>
+          {boughtCount > 0 && (
+            <div style={styles.actionsRowSplit}>
+              <button
+                type='button'
+                style={{ ...styles.ghostBtn, ...styles.actionBtnFull }}
+                onClick={onClearBought}
+              >
+                🧹 Megvett törlése
+              </button>
+            </div>
           )}
-          <button
-            style={{ ...styles.ghostBtn, ...styles.dangerBtn }}
-            onClick={onClearAll}
-          >
-            🗑 Mind törlése
-          </button>
         </div>
       )}
 
@@ -95,23 +108,6 @@ export function GroceryListPanel({
           onClose={onCloseSavePreset}
           errorMessage={presetSaveErrorMessage}
         />
-      )}
-
-      {items.length > 0 && (
-        <div style={styles.legend}>
-          <span style={styles.legendItem}>
-            <span style={styles.legendDot({ color: '#22c55e' })} />
-            Megvenni
-          </span>
-          <span style={styles.legendItem}>
-            <span style={styles.legendDot({ color: '#94a3b8' })} />
-            Már megvan
-          </span>
-          <span style={styles.legendItem}>
-            <span style={{ ...styles.legendCheck }} />
-            Megvéve
-          </span>
-        </div>
       )}
 
       {items.length === 0 ? (

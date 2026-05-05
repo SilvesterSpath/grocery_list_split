@@ -44,7 +44,10 @@ export function ItemRow({
         ⠿
       </span>
 
-      <label style={styles.checkboxLabel}>
+      <label
+        style={styles.checkboxLabel}
+        title={item.bought ? 'Nincs a kosárban' : 'Kosárba'}
+      >
         <input
           type='checkbox'
           checked={item.bought}
@@ -86,7 +89,7 @@ export function ItemRow({
 
       <label
         style={styles.toggleLabel}
-        title={item.needed ? 'Megjelölés: már megvan' : 'Megjelölés: szükséges'}
+        title={item.needed ? 'Már megvan' : 'Szükséges'}
       >
         <input
           type='checkbox'
