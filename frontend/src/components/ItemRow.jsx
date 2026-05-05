@@ -64,6 +64,10 @@ export function ItemRow({
 
   const boughtLabel = item.bought ? 'Nincs a kosárban' : 'Kosárba';
   const neededLabel = item.needed ? 'Már megvan' : 'Szükséges';
+  const isBasketDisabled = !item.needed;
+  const basketTitle = isBasketDisabled
+    ? 'Kosárba jelölés csak a Megvenni tételeknél elérhető'
+    : boughtLabel;
 
   const handleEditPick = () => {
     setMenuOpen(false);
@@ -99,20 +103,25 @@ export function ItemRow({
       </span>
 
       <label
-        style={styles.checkboxLabel}
-        title={boughtLabel}
-        aria-label={boughtLabel}
+        style={{
+          ...styles.checkboxLabel,
+          ...(isBasketDisabled ? styles.checkboxLabelDisabled : {}),
+        }}
+        title={basketTitle}
+        aria-label={basketTitle}
       >
         <input
           type='checkbox'
           className='kamra-sr-only'
           checked={item.bought}
+          disabled={isBasketDisabled}
           onChange={() => onToggleBought(item.id)}
         />
         <span
           style={{
             ...styles.customCheck,
             ...(item.bought ? styles.customCheckChecked : {}),
+            ...(isBasketDisabled ? styles.customCheckDisabled : {}),
           }}
           aria-hidden='true'
         >

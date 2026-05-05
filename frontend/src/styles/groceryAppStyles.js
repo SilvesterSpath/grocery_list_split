@@ -64,7 +64,6 @@
   }
 
   button:focus-visible,
-  [role='tab']:focus-visible,
   select:focus-visible,
   input:focus-visible {
     outline: 2px solid var(--accent);
@@ -183,34 +182,6 @@ export const styles = {
     borderRadius: 20,
   },
 
-  tabs: {
-    display: 'flex',
-    padding: '0 14px',
-    gap: 4,
-  },
-
-  tab: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 13,
-    fontWeight: 500,
-    padding: '8px 14px',
-    border: 'none',
-    background: 'none',
-    cursor: 'pointer',
-    color: 'var(--muted)',
-    borderBottomWidth: '2px',
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'transparent',
-    transition: 'all 0.15s',
-    marginBottom: -2,
-  },
-
-  tabActive: {
-    color: 'var(--text)',
-    borderBottomColor: 'var(--accent)',
-    fontWeight: 600,
-  },
-
   main: {
     padding: '14px 16px 0',
   },
@@ -301,6 +272,60 @@ export const styles = {
     borderColor: 'var(--danger-border)',
   },
 
+  actionsMenuWrap: {
+    position: 'relative',
+    flexShrink: 0,
+  },
+
+  actionsMenuBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 18,
+    fontWeight: 700,
+    lineHeight: 1,
+    color: 'var(--muted)',
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 8,
+    cursor: 'pointer',
+    minWidth: 36,
+    height: 36,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+  },
+
+  actionsMenuDropdown: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: 4,
+    minWidth: 160,
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 10,
+    boxShadow: 'var(--shadow)',
+    zIndex: 70,
+    overflow: 'hidden',
+  },
+
+  actionsMenuItem: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 13,
+    fontWeight: 500,
+    width: '100%',
+    textAlign: 'left',
+    padding: '10px 12px',
+    background: 'var(--surface)',
+    border: 'none',
+    color: 'var(--text)',
+    cursor: 'pointer',
+  },
+
+  actionsMenuItemDanger: {
+    color: 'var(--danger)',
+  },
+
   section: {
     marginBottom: 16,
   },
@@ -383,6 +408,10 @@ export const styles = {
     flexShrink: 0,
   },
 
+  checkboxLabelDisabled: {
+    cursor: 'not-allowed',
+  },
+
   customCheck: {
     width: 18,
     height: 18,
@@ -399,6 +428,12 @@ export const styles = {
   customCheckChecked: {
     background: 'var(--success)',
     borderColor: 'var(--success)',
+  },
+
+  customCheckDisabled: {
+    background: 'color-mix(in srgb, var(--surface) 70%, var(--surface-2))',
+    borderColor: 'color-mix(in srgb, var(--border) 75%, var(--surface))',
+    opacity: 0.7,
   },
 
   checkMark: {
@@ -791,5 +826,67 @@ export const styles = {
     fontSize: 14,
     fontWeight: 600,
     color: 'var(--muted)',
+  },
+
+  loadPresetsOverlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'var(--overlay-scrim)',
+    zIndex: 180,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+
+  loadPresetsDialog: {
+    width: '100%',
+    maxWidth: 620,
+    maxHeight: '88vh',
+    overflow: 'hidden',
+    border: '1px solid var(--border)',
+    borderRadius: 14,
+    background: 'var(--surface)',
+    boxShadow: 'var(--shadow-strong)',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  loadPresetsHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+    padding: '12px 14px',
+    borderBottom: '1px solid var(--border)',
+  },
+
+  loadPresetsTitle: {
+    fontFamily: "'Fraunces', serif",
+    fontSize: 18,
+    fontWeight: 600,
+    color: 'var(--text)',
+  },
+
+  loadPresetsCloseBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    border: '1px solid var(--border)',
+    borderRadius: 8,
+    background: 'var(--surface)',
+    color: 'var(--muted)',
+    minWidth: 34,
+    height: 34,
+    padding: 0,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    lineHeight: 1,
+    fontSize: 14,
+  },
+
+  loadPresetsBody: {
+    padding: '12px 14px 14px',
+    overflowY: 'auto',
   },
 };

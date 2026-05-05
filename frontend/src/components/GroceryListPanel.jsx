@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ItemRow } from './ItemRow.jsx';
 import { SavePresetModal } from './SavePresetModal.jsx';
 import { styles } from '../styles/groceryAppStyles.js';
@@ -13,6 +13,7 @@ export function GroceryListPanel({
   onAddItem,
   showSavePreset,
   onOpenSavePreset,
+  onOpenPresetOverlay,
   onCloseSavePreset,
   newPresetName,
   onNewPresetNameChange,
@@ -42,11 +43,37 @@ export function GroceryListPanel({
   onDragEnd,
 }) {
   const inputRef = useRef(null);
+  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+  const actionsMenuWrapRef = useRef(null);
+  const actionsMenuBtnRef = useRef(null);
 
   const addItem = () => {
     onAddItem();
     inputRef.current?.focus();
   };
+
+  useEffect(() => {
+    if (!isActionsMenuOpen) return;
+
+    const onDocumentMouseDown = (e) => {
+      if (!actionsMenuWrapRef.current?.contains(e.target)) {
+        setIsActionsMenuOpen(false);
+      }
+    };
+    const onDocumentKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsActionsMenuOpen(false);
+        actionsMenuBtnRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('mousedown', onDocumentMouseDown);
+    document.addEventListener('keydown', onDocumentKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onDocumentMouseDown);
+      document.removeEventListener('keydown', onDocumentKeyDown);
+    };
+  }, [isActionsMenuOpen]);
 
   return (
     <>
@@ -69,37 +96,69 @@ export function GroceryListPanel({
         </button>
       </div>
 
-      {items.length > 0 && (
-        <div style={styles.actionsBlock}>
+      <div style={styles.actionsBlock}>
+        <div style={styles.actionsRowSplit}>
+          <button
+            type='button'
+            style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
+            onClick={onOpenSavePreset}
+          >
+            💾 Mentés
+          </button>
+          <button
+            type='button'
+            style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
+            onClick={onOpenPresetOverlay}
+          >
+            📂 Lista betöltése
+          </button>
+          <div ref={actionsMenuWrapRef} style={styles.actionsMenuWrap}>
+            <button
+              ref={actionsMenuBtnRef}
+              type='button'
+              aria-label='Lista műveletek'
+              aria-haspopup='menu'
+              aria-expanded={isActionsMenuOpen}
+              style={styles.actionsMenuBtn}
+              onClick={() => setIsActionsMenuOpen((open) => !open)}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              ⋯
+            </button>
+            {isActionsMenuOpen && (
+              <div
+                role='menu'
+                aria-label='Lista műveletek menü'
+                style={styles.actionsMenuDropdown}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                <button
+                  type='button'
+                  role='menuitem'
+                  style={{ ...styles.actionsMenuItem, ...styles.actionsMenuItemDanger }}
+                  onClick={() => {
+                    setIsActionsMenuOpen(false);
+                    onClearAll();
+                  }}
+                >
+                  Lista törlése
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        {boughtCount > 0 && (
           <div style={styles.actionsRowSplit}>
             <button
               type='button'
-              style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
-              onClick={onOpenSavePreset}
+              style={{ ...styles.ghostBtn, ...styles.actionBtnFull }}
+              onClick={onClearBought}
             >
-              💾 Mentés
-            </button>
-            <button
-              type='button'
-              style={{ ...styles.ghostBtn, ...styles.dangerBtn, ...styles.actionBtnHalf }}
-              onClick={onClearAll}
-            >
-              🗑 Lista törése
+              🧹 Megvett törlése
             </button>
           </div>
-          {boughtCount > 0 && (
-            <div style={styles.actionsRowSplit}>
-              <button
-                type='button'
-                style={{ ...styles.ghostBtn, ...styles.actionBtnFull }}
-                onClick={onClearBought}
-              >
-                🧹 Megvett törlése
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
 
       {showSavePreset && (
         <SavePresetModal

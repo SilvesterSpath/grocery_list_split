@@ -37,8 +37,9 @@ export default function GroceryApp() {
   const [loadedPresetName, setLoadedPresetName] = useState('');
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
-  const [activeTab, setActiveTab] = useState('list');
   const [isHydrating, setIsHydrating] = useState(true);
+  const [isLoadPresetsOverlayOpen, setIsLoadPresetsOverlayOpen] =
+    useState(false);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -83,6 +84,19 @@ export default function GroceryApp() {
     });
   }, [items, loadedPresetName]);
 
+  useEffect(() => {
+    if (!isLoadPresetsOverlayOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsLoadPresetsOverlayOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isLoadPresetsOverlayOpen]);
+
   const addItem = () => {
     const name = newItemName.trim();
     if (!name) return;
@@ -96,7 +110,12 @@ export default function GroceryApp() {
 
   const toggleNeeded = (id) =>
     setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, needed: !i.needed } : i)),
+      prev.map((i) => {
+        if (i.id !== id) return i;
+        const nextNeeded = !i.needed;
+        // Items moved to "Már megvan" cannot stay in basket.
+        return { ...i, needed: nextNeeded, bought: nextNeeded ? i.bought : false };
+      }),
     );
 
   const toggleBought = (id) =>
@@ -151,7 +170,7 @@ export default function GroceryApp() {
         presetName,
       });
       setLoadedPresetName(presetName);
-      setActiveTab('list');
+      setIsLoadPresetsOverlayOpen(false);
       return;
     }
 
@@ -162,7 +181,7 @@ export default function GroceryApp() {
         presetName,
       });
       setLoadedPresetName(presetName);
-      setActiveTab('list');
+      setIsLoadPresetsOverlayOpen(false);
       return;
     }
     if (choice === 'replace') {
@@ -171,7 +190,7 @@ export default function GroceryApp() {
         presetName,
       });
       setLoadedPresetName(presetName);
-      setActiveTab('list');
+      setIsLoadPresetsOverlayOpen(false);
       return;
     }
 
@@ -184,6 +203,14 @@ export default function GroceryApp() {
     setPresetSaveErrorMessage('');
     setNewPresetName('');
     setShowSavePreset(true);
+  };
+
+  const handleOpenLoadPresetsOverlay = () => {
+    setIsLoadPresetsOverlayOpen(true);
+  };
+
+  const handleCloseLoadPresetsOverlay = () => {
+    setIsLoadPresetsOverlayOpen(false);
   };
 
   const saveAsPreset = async () => {
@@ -320,64 +347,92 @@ export default function GroceryApp() {
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         boughtCount={boughtCount}
         itemCount={items.length}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
       />
 
       <main style={styles.main}>
-        {activeTab === 'list' && (
-          <GroceryListPanel
-            items={items}
-            neededItems={neededItems}
-            haveItems={haveItems}
-            boughtCount={boughtCount}
-            newItemName={newItemName}
-            onNewItemNameChange={setNewItemName}
-            onAddItem={addItem}
-            showSavePreset={showSavePreset}
-            onOpenSavePreset={handleOpenSavePreset}
-            onCloseSavePreset={() => {
-              setShowSavePreset(false);
-              setPresetSaveErrorMessage('');
-            }}
-            newPresetName={newPresetName}
-            onNewPresetNameChange={setNewPresetName}
-            existingPresetNames={Object.keys(presets)}
-            onSaveAsPreset={saveAsPreset}
-            saveMode={saveMode}
-            onSaveModeChange={setSaveMode}
-            activePresetName={loadedPresetName}
-            presetSaveErrorMessage={presetSaveErrorMessage}
-            onClearBought={clearBought}
-            onClearAll={clearAll}
-            loadedPresetName={loadedPresetName}
-            editingId={editingId}
-            editingName={editingName}
-            setEditingName={setEditingName}
-            onStartEdit={startEdit}
-            onCommitEdit={commitEdit}
-            onEditKey={handleEditKey}
-            onToggleNeeded={toggleNeeded}
-            onToggleBought={toggleBought}
-            onDeleteItem={deleteItem}
-            dragState={dragState}
-            dragOver={dragOver}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onDragEnd={handleDragEnd}
-          />
-        )}
-
-        {activeTab === 'presets' && (
-          <PresetsPanel
-            presets={presets}
-            mainListItemCount={items.length}
-            onAddFromPreset={addFromPreset}
-            onDeletePreset={deletePreset}
-          />
-        )}
+        <GroceryListPanel
+          items={items}
+          neededItems={neededItems}
+          haveItems={haveItems}
+          boughtCount={boughtCount}
+          newItemName={newItemName}
+          onNewItemNameChange={setNewItemName}
+          onAddItem={addItem}
+          showSavePreset={showSavePreset}
+          onOpenSavePreset={handleOpenSavePreset}
+          onOpenPresetOverlay={handleOpenLoadPresetsOverlay}
+          onCloseSavePreset={() => {
+            setShowSavePreset(false);
+            setPresetSaveErrorMessage('');
+          }}
+          newPresetName={newPresetName}
+          onNewPresetNameChange={setNewPresetName}
+          existingPresetNames={Object.keys(presets)}
+          onSaveAsPreset={saveAsPreset}
+          saveMode={saveMode}
+          onSaveModeChange={setSaveMode}
+          activePresetName={loadedPresetName}
+          presetSaveErrorMessage={presetSaveErrorMessage}
+          onClearBought={clearBought}
+          onClearAll={clearAll}
+          loadedPresetName={loadedPresetName}
+          editingId={editingId}
+          editingName={editingName}
+          setEditingName={setEditingName}
+          onStartEdit={startEdit}
+          onCommitEdit={commitEdit}
+          onEditKey={handleEditKey}
+          onToggleNeeded={toggleNeeded}
+          onToggleBought={toggleBought}
+          onDeleteItem={deleteItem}
+          dragState={dragState}
+          dragOver={dragOver}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          onDragEnd={handleDragEnd}
+        />
       </main>
+
+      {isLoadPresetsOverlayOpen && (
+        <div
+          style={styles.loadPresetsOverlay}
+          role='dialog'
+          aria-modal='true'
+          aria-labelledby='load-presets-overlay-title'
+          onClick={handleCloseLoadPresetsOverlay}
+        >
+          <div
+            style={styles.loadPresetsDialog}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={styles.loadPresetsHeader}>
+              <div
+                id='load-presets-overlay-title'
+                style={styles.loadPresetsTitle}
+              >
+                Lista betöltése
+              </div>
+              <button
+                type='button'
+                style={styles.loadPresetsCloseBtn}
+                aria-label='Lista betöltése panel bezárása'
+                onClick={handleCloseLoadPresetsOverlay}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={styles.loadPresetsBody}>
+              <PresetsPanel
+                presets={presets}
+                mainListItemCount={items.length}
+                onAddFromPreset={addFromPreset}
+                onDeletePreset={deletePreset}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {isHydrating && <StartupSyncModal />}
     </div>
