@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
 
 export function ItemRow({
@@ -21,13 +21,59 @@ export function ItemRow({
 }) {
   const isEditing = editingId === item.id;
   const editRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuWrapRef = useRef(null);
+  const menuBtnRef = useRef(null);
+  const firstMenuItemRef = useRef(null);
 
   useEffect(() => {
     if (isEditing) editRef.current?.focus();
   }, [isEditing]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDocMouseDown = (e) => {
+      if (!menuWrapRef.current?.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setMenuOpen(false);
+        menuBtnRef.current?.focus();
+      }
+    };
+    document.addEventListener('mousedown', onDocMouseDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onDocMouseDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (menuOpen) {
+      queueMicrotask(() => firstMenuItemRef.current?.focus());
+    }
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (isEditing) setMenuOpen(false);
+  }, [isEditing]);
+
   const boughtLabel = item.bought ? 'Nincs a kosárban' : 'Kosárba';
   const neededLabel = item.needed ? 'Már megvan' : 'Szükséges';
+
+  const handleEditPick = () => {
+    setMenuOpen(false);
+    onStartEdit(item);
+  };
+
+  const handleDeletePick = () => {
+    setMenuOpen(false);
+    onDelete(item.id);
+  };
 
   return (
     <div
@@ -41,6 +87,7 @@ export function ItemRow({
         ...(isDragging ? styles.itemDragging : {}),
         ...(isDragOver ? styles.itemDragOver : {}),
         ...(item.bought ? styles.itemBought : {}),
+        ...(menuOpen ? styles.itemRowMenuOpen : {}),
       }}
     >
       <span
@@ -123,27 +170,49 @@ export function ItemRow({
         </span>
       </label>
 
-      {!isEditing && (
+      <div ref={menuWrapRef} style={styles.rowMenuWrap}>
         <button
+          ref={menuBtnRef}
           type='button'
-          style={styles.iconBtn}
-          onClick={() => onStartEdit(item)}
-          title='Név szerkesztése'
-          aria-label='Név szerkesztése'
+          style={styles.rowMenuBtn}
+          aria-label='További műveletek a tételnél'
+          aria-expanded={menuOpen}
+          aria-haspopup='menu'
+          onClick={() => setMenuOpen((o) => !o)}
+          onMouseDown={(e) => e.stopPropagation()}
         >
-          ✎
+          ⋯
         </button>
-      )}
-
-      <button
-        type='button'
-        style={{ ...styles.iconBtn, ...styles.deleteBtn }}
-        onClick={() => onDelete(item.id)}
-        title='Törlés'
-        aria-label='Tétel törlése'
-      >
-        ✕
-      </button>
+        {menuOpen ? (
+          <div
+            role='menu'
+            aria-label='Tétel műveletek'
+            style={styles.rowMenuDropdown}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            {!isEditing ? (
+              <button
+                ref={firstMenuItemRef}
+                type='button'
+                role='menuitem'
+                style={styles.rowMenuItem}
+                onClick={handleEditPick}
+              >
+                Szerkesztés
+              </button>
+            ) : null}
+            <button
+              ref={isEditing ? firstMenuItemRef : null}
+              type='button'
+              role='menuitem'
+              style={{ ...styles.rowMenuItem, ...styles.rowMenuItemDanger }}
+              onClick={handleDeletePick}
+            >
+              Törlés
+            </button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

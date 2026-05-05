@@ -19,7 +19,10 @@
     --text-on-accent: #ffffff;
     --overlay-scrim: rgba(44, 36, 22, 0.42);
     --overlay-scrim-soft: rgba(44, 36, 22, 0.34);
-    --drag-handle: color-mix(in srgb, var(--muted) 48%, var(--border));
+    --drag-handle: color-mix(in srgb, var(--muted) 28%, var(--border));
+    --row-border: color-mix(in srgb, var(--border) 78%, var(--surface));
+    --row-surface: color-mix(in srgb, var(--surface) 94%, var(--bg));
+    --toggle-on: color-mix(in srgb, var(--success) 52%, var(--surface-2));
   }
 
   :root[data-theme="dark"]{
@@ -41,7 +44,10 @@
     --text-on-accent: #ffffff;
     --overlay-scrim: rgba(0, 0, 0, 0.55);
     --overlay-scrim-soft: rgba(0, 0, 0, 0.48);
-    --drag-handle: color-mix(in srgb, var(--muted-2) 70%, var(--border));
+    --drag-handle: color-mix(in srgb, var(--muted-2) 45%, var(--border));
+    --row-border: color-mix(in srgb, var(--border) 88%, var(--surface));
+    --row-surface: color-mix(in srgb, var(--surface) 96%, var(--bg));
+    --toggle-on: color-mix(in srgb, var(--success) 42%, var(--surface-2));
   }
 
   .kamra-sr-only {
@@ -63,6 +69,10 @@
   input:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  button[role='menuitem']:hover {
+    background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -89,7 +99,7 @@ export const styles = {
     color: 'var(--text)',
     maxWidth: 620,
     margin: '0 auto',
-    paddingBottom: 60,
+    paddingBottom: 52,
   },
 
   header: {
@@ -202,13 +212,13 @@ export const styles = {
   },
 
   main: {
-    padding: '16px 16px 0',
+    padding: '14px 16px 0',
   },
 
   addRow: {
     display: 'flex',
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 9,
   },
 
   addInput: {
@@ -244,8 +254,8 @@ export const styles = {
   actionsBlock: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
-    marginBottom: 12,
+    gap: 7,
+    marginBottom: 10,
   },
 
   actionsRowSplit: {
@@ -295,13 +305,19 @@ export const styles = {
     marginBottom: 16,
   },
 
+  sectionFollows: {
+    marginTop: 17,
+  },
+
   sectionLabel: {
     fontSize: 11,
     fontWeight: 600,
-    letterSpacing: '0.06em',
+    letterSpacing: '0.05em',
     textTransform: 'uppercase',
     color: 'var(--muted)',
-    marginBottom: 6,
+    marginBottom: 7,
+    paddingBottom: 6,
+    borderBottom: '1px solid color-mix(in srgb, var(--border) 55%, transparent)',
     display: 'flex',
     alignItems: 'center',
     gap: 6,
@@ -317,19 +333,24 @@ export const styles = {
   }),
 
   itemRow: {
+    position: 'relative',
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    background: 'var(--surface)',
+    background: 'var(--row-surface)',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'var(--border)',
+    borderColor: 'var(--row-border)',
     borderRadius: 10,
-    padding: '9px 10px',
+    padding: '6px 10px',
     marginBottom: 6,
     transition: 'all 0.15s',
     cursor: 'default',
     userSelect: 'none',
+  },
+
+  itemRowMenuOpen: {
+    zIndex: 6,
   },
 
   itemDragging: {
@@ -343,8 +364,8 @@ export const styles = {
   },
 
   itemBought: {
-    background: 'color-mix(in srgb, var(--surface) 75%, var(--surface-2))',
-    borderColor: 'var(--border)',
+    background: 'color-mix(in srgb, var(--row-surface) 82%, var(--surface-2))',
+    borderColor: 'var(--row-border)',
   },
 
   dragHandle: {
@@ -429,31 +450,35 @@ export const styles = {
   toggle: {
     display: 'flex',
     alignItems: 'center',
-    width: 34,
-    height: 18,
-    borderRadius: 9,
+    width: 30,
+    height: 17,
+    borderRadius: 8,
     padding: '2px',
     transition: 'background 0.2s',
     flexShrink: 0,
+    border: '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
+    boxSizing: 'border-box',
   },
 
   toggleOn: {
-    background: 'var(--success)',
+    background: 'var(--toggle-on)',
+    borderColor: 'color-mix(in srgb, var(--success) 35%, var(--border))',
     justifyContent: 'flex-end',
   },
 
   toggleOff: {
-    background: 'color-mix(in srgb, var(--muted) 35%, var(--border))',
+    background: 'color-mix(in srgb, var(--muted) 28%, var(--border))',
+    borderColor: 'color-mix(in srgb, var(--border) 80%, var(--surface))',
     justifyContent: 'flex-start',
   },
 
   toggleKnob: {
-    width: 14,
-    height: 14,
+    width: 10,
+    height: 10,
     borderRadius: '50%',
     background: 'var(--surface)',
     boxShadow:
-      '0 8px 20px color-mix(in srgb, var(--text) 22%, transparent)',
+      '0 2px 6px color-mix(in srgb, var(--text) 14%, transparent)',
     transition: 'all 0.2s',
     flexShrink: 0,
   },
@@ -473,8 +498,67 @@ export const styles = {
     flexShrink: 0,
   },
 
-  deleteBtn: {
-    fontSize: 11,
+  rowMenuWrap: {
+    position: 'relative',
+    flexShrink: 0,
+    alignSelf: 'stretch',
+    display: 'flex',
+    alignItems: 'center',
+  },
+
+  rowMenuBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 18,
+    fontWeight: 700,
+    lineHeight: 1,
+    letterSpacing: '0.02em',
+    color: 'var(--muted-2)',
+    background: 'transparent',
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    padding: 0,
+    minWidth: 40,
+    minHeight: 40,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'color 0.15s, background 0.15s',
+  },
+
+  rowMenuDropdown: {
+    position: 'absolute',
+    right: 0,
+    top: '100%',
+    marginTop: 3,
+    minWidth: 148,
+    padding: '4px 0',
+    background: 'var(--surface)',
+    border: '1px solid var(--row-border)',
+    borderRadius: 10,
+    boxShadow: 'var(--shadow)',
+    zIndex: 50,
+  },
+
+  rowMenuItem: {
+    fontFamily: "'DM Sans', sans-serif",
+    display: 'block',
+    width: '100%',
+    textAlign: 'left',
+    fontSize: 14,
+    fontWeight: 500,
+    padding: '9px 14px',
+    minHeight: 40,
+    boxSizing: 'border-box',
+    border: 'none',
+    background: 'transparent',
+    color: 'var(--text)',
+    cursor: 'pointer',
+    transition: 'background 0.12s',
+  },
+
+  rowMenuItemDanger: {
+    color: 'var(--danger)',
   },
 
   empty: {

@@ -157,7 +157,12 @@ export function GroceryListPanel({
           )}
 
           {haveItems.length > 0 && (
-            <section style={styles.section}>
+            <section
+              style={{
+                ...styles.section,
+                ...(neededItems.length > 0 ? styles.sectionFollows : {}),
+              }}
+            >
               <div style={styles.sectionLabel}>
                 <span
                   style={styles.sectionDot({ color: 'var(--muted-2)' })}
