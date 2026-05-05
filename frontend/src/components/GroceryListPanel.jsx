@@ -7,7 +7,6 @@ export function GroceryListPanel({
   items,
   neededItems,
   haveItems,
-  boughtCount,
   newItemName,
   onNewItemNameChange,
   onAddItem,
@@ -23,7 +22,6 @@ export function GroceryListPanel({
   onSaveModeChange,
   activePresetName,
   presetSaveErrorMessage,
-  onClearBought,
   onClearAll,
   loadedPresetName,
   editingId,
@@ -105,21 +103,24 @@ export function GroceryListPanel({
           >
             💾 Mentés
           </button>
-          <button
-            type='button'
-            style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
-            onClick={onOpenPresetOverlay}
+          <div
+            ref={actionsMenuWrapRef}
+            style={{ ...styles.actionLoadGroup, ...styles.actionBtnHalf }}
           >
-            📂 Lista betöltése
-          </button>
-          <div ref={actionsMenuWrapRef} style={styles.actionsMenuWrap}>
+            <button
+              type='button'
+              style={styles.actionLoadBtn}
+              onClick={onOpenPresetOverlay}
+            >
+              📂 Lista betöltése
+            </button>
             <button
               ref={actionsMenuBtnRef}
               type='button'
               aria-label='Lista műveletek'
               aria-haspopup='menu'
               aria-expanded={isActionsMenuOpen}
-              style={styles.actionsMenuBtn}
+              style={styles.actionLoadMenuBtn}
               onClick={() => setIsActionsMenuOpen((open) => !open)}
               onMouseDown={(e) => e.stopPropagation()}
             >
@@ -135,7 +136,10 @@ export function GroceryListPanel({
                 <button
                   type='button'
                   role='menuitem'
-                  style={{ ...styles.actionsMenuItem, ...styles.actionsMenuItemDanger }}
+                  style={{
+                    ...styles.actionsMenuItem,
+                    ...styles.actionsMenuItemDanger,
+                  }}
                   onClick={() => {
                     setIsActionsMenuOpen(false);
                     onClearAll();
@@ -212,9 +216,7 @@ export function GroceryListPanel({
               }}
             >
               <div style={styles.sectionLabel}>
-                <span
-                  style={styles.sectionDot({ color: 'var(--muted-2)' })}
-                />
+                <span style={styles.sectionDot({ color: 'var(--muted-2)' })} />
                 Már megvan ({haveItems.length})
               </div>
               {haveItems.map((item) => (

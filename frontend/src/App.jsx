@@ -293,11 +293,6 @@ export default function GroceryApp() {
     });
   };
 
-  const clearBought = () => {
-    setItems((prev) => prev.filter((i) => !i.bought));
-    console.log('debug loadedPresetName clear from clearBought');
-    setLoadedPresetName('');
-  };
   const clearAll = () => {
     const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
     if (!shouldClear) return;
@@ -355,7 +350,6 @@ export default function GroceryApp() {
           items={items}
           neededItems={neededItems}
           haveItems={haveItems}
-          boughtCount={boughtCount}
           newItemName={newItemName}
           onNewItemNameChange={setNewItemName}
           onAddItem={addItem}
@@ -374,7 +368,6 @@ export default function GroceryApp() {
           onSaveModeChange={setSaveMode}
           activePresetName={loadedPresetName}
           presetSaveErrorMessage={presetSaveErrorMessage}
-          onClearBought={clearBought}
           onClearAll={clearAll}
           loadedPresetName={loadedPresetName}
           editingId={editingId}

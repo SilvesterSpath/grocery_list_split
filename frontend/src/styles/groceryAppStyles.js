@@ -22,7 +22,7 @@
     --drag-handle: color-mix(in srgb, var(--muted) 28%, var(--border));
     --row-border: color-mix(in srgb, var(--border) 78%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 94%, var(--bg));
-    --toggle-on: color-mix(in srgb, var(--success) 52%, var(--surface-2));
+    --toggle-on: color-mix(in srgb, var(--muted) 36%, var(--surface-2));
   }
 
   :root[data-theme="dark"]{
@@ -47,7 +47,7 @@
     --drag-handle: color-mix(in srgb, var(--muted-2) 45%, var(--border));
     --row-border: color-mix(in srgb, var(--border) 88%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 96%, var(--bg));
-    --toggle-on: color-mix(in srgb, var(--success) 42%, var(--surface-2));
+    --toggle-on: color-mix(in srgb, var(--muted-2) 42%, var(--surface-2));
   }
 
   .kamra-sr-only {
@@ -164,19 +164,19 @@ export const styles = {
   },
 
   badge: {
-    background: 'color-mix(in srgb, var(--success) 20%, var(--surface))',
-    color: 'color-mix(in srgb, var(--success) 72%, var(--text))',
+    background: 'color-mix(in srgb, var(--success) 14%, var(--surface))',
+    color: 'color-mix(in srgb, var(--success) 56%, var(--text))',
     fontSize: 11,
-    fontWeight: 600,
+    fontWeight: 500,
     padding: '3px 8px',
     borderRadius: 20,
-    border: '1px solid color-mix(in srgb, var(--success) 35%, var(--border))',
+    border: '1px solid color-mix(in srgb, var(--success) 24%, var(--border))',
   },
 
   badgeActiveList: {
-    background: 'color-mix(in srgb, var(--accent) 22%, var(--surface))',
-    color: 'color-mix(in srgb, var(--accent) 76%, var(--text))',
-    border: '1px solid color-mix(in srgb, var(--accent) 40%, var(--border))',
+    background: 'color-mix(in srgb, var(--accent) 16%, var(--surface))',
+    color: 'color-mix(in srgb, var(--accent) 62%, var(--text))',
+    border: '1px solid color-mix(in srgb, var(--accent) 26%, var(--border))',
   },
 
   totalBadge: {
@@ -251,6 +251,53 @@ export const styles = {
     boxSizing: 'border-box',
   },
 
+  actionLoadGroup: {
+    position: 'relative',
+    border: '1px solid var(--border)',
+    borderRadius: 8,
+    background: 'var(--surface)',
+    overflow: 'visible',
+    padding: 0,
+    gap: 0,
+  },
+
+  actionLoadBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 12,
+    fontWeight: 500,
+    color: 'var(--muted)',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    flex: 1,
+    minWidth: 0,
+    minHeight: 36,
+    padding: '5px 10px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  actionLoadMenuBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 18,
+    fontWeight: 700,
+    lineHeight: 1,
+    color: 'var(--muted)',
+    background: 'transparent',
+    border: 'none',
+    borderLeft: '1px solid var(--border)',
+    cursor: 'pointer',
+    minWidth: 36,
+    height: 36,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+
   actionBtnFull: {
     flex: 1,
     display: 'flex',
@@ -280,25 +327,7 @@ export const styles = {
 
   actionsMenuWrap: {
     position: 'relative',
-    flexShrink: 0,
-  },
-
-  actionsMenuBtn: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 18,
-    fontWeight: 700,
-    lineHeight: 1,
-    color: 'var(--muted)',
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    borderRadius: 8,
-    cursor: 'pointer',
-    minWidth: 36,
-    height: 36,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
+    flexShrink: 1,
   },
 
   actionsMenuDropdown: {
@@ -348,7 +377,8 @@ export const styles = {
     color: 'var(--muted)',
     marginBottom: 7,
     paddingBottom: 6,
-    borderBottom: '1px solid color-mix(in srgb, var(--border) 55%, transparent)',
+    borderBottom:
+      '1px solid color-mix(in srgb, var(--border) 55%, transparent)',
     display: 'flex',
     alignItems: 'center',
     gap: 6,
@@ -503,13 +533,13 @@ export const styles = {
 
   toggleOn: {
     background: 'var(--toggle-on)',
-    borderColor: 'color-mix(in srgb, var(--success) 35%, var(--border))',
+    borderColor: 'color-mix(in srgb, var(--muted-2) 45%, var(--border))',
     justifyContent: 'flex-end',
   },
 
   toggleOff: {
-    background: 'color-mix(in srgb, var(--muted) 28%, var(--border))',
-    borderColor: 'color-mix(in srgb, var(--border) 80%, var(--surface))',
+    background: 'color-mix(in srgb, var(--muted) 18%, var(--border))',
+    borderColor: 'color-mix(in srgb, var(--border) 68%, var(--surface))',
     justifyContent: 'flex-start',
   },
 
@@ -518,8 +548,7 @@ export const styles = {
     height: 10,
     borderRadius: '50%',
     background: 'var(--surface)',
-    boxShadow:
-      '0 2px 6px color-mix(in srgb, var(--text) 14%, transparent)',
+    boxShadow: '0 2px 6px color-mix(in srgb, var(--text) 14%, transparent)',
     transition: 'all 0.2s',
     flexShrink: 0,
   },
