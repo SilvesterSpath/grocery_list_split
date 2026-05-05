@@ -147,17 +147,6 @@ export function GroceryListPanel({
             )}
           </div>
         </div>
-        {boughtCount > 0 && (
-          <div style={styles.actionsRowSplit}>
-            <button
-              type='button'
-              style={{ ...styles.ghostBtn, ...styles.actionBtnFull }}
-              onClick={onClearBought}
-            >
-              🧹 Megvett törlése
-            </button>
-          </div>
-        )}
       </div>
 
       {showSavePreset && (
