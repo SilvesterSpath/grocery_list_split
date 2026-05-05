@@ -26,6 +26,9 @@ export function ItemRow({
     if (isEditing) editRef.current?.focus();
   }, [isEditing]);
 
+  const boughtLabel = item.bought ? 'Nincs a kosárban' : 'Kosárba';
+  const neededLabel = item.needed ? 'Már megvan' : 'Szükséges';
+
   return (
     <div
       draggable
@@ -40,25 +43,31 @@ export function ItemRow({
         ...(item.bought ? styles.itemBought : {}),
       }}
     >
-      <span style={styles.dragHandle} title='Húzd az átrendezéshez'>
+      <span
+        style={styles.dragHandle}
+        title='Húzd az átrendezéshez'
+        aria-hidden='true'
+      >
         ⠿
       </span>
 
       <label
         style={styles.checkboxLabel}
-        title={item.bought ? 'Nincs a kosárban' : 'Kosárba'}
+        title={boughtLabel}
+        aria-label={boughtLabel}
       >
         <input
           type='checkbox'
+          className='kamra-sr-only'
           checked={item.bought}
           onChange={() => onToggleBought(item.id)}
-          style={styles.checkboxInput}
         />
         <span
           style={{
             ...styles.customCheck,
             ...(item.bought ? styles.customCheckChecked : {}),
           }}
+          aria-hidden='true'
         >
           {item.bought && <span style={styles.checkMark}>✓</span>}
         </span>
@@ -89,19 +98,21 @@ export function ItemRow({
 
       <label
         style={styles.toggleLabel}
-        title={item.needed ? 'Már megvan' : 'Szükséges'}
+        title={neededLabel}
+        aria-label={neededLabel}
       >
         <input
           type='checkbox'
+          className='kamra-sr-only'
           checked={item.needed}
           onChange={() => onToggleNeeded(item.id)}
-          style={{ display: 'none' }}
         />
         <span
           style={{
             ...styles.toggle,
             ...(item.needed ? styles.toggleOn : styles.toggleOff),
           }}
+          aria-hidden='true'
         >
           <span
             style={{
@@ -114,18 +125,22 @@ export function ItemRow({
 
       {!isEditing && (
         <button
+          type='button'
           style={styles.iconBtn}
           onClick={() => onStartEdit(item)}
           title='Név szerkesztése'
+          aria-label='Név szerkesztése'
         >
           ✎
         </button>
       )}
 
       <button
+        type='button'
         style={{ ...styles.iconBtn, ...styles.deleteBtn }}
         onClick={() => onDelete(item.id)}
         title='Törlés'
+        aria-label='Tétel törlése'
       >
         ✕
       </button>

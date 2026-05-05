@@ -175,7 +175,7 @@ export default function GroceryApp() {
       return;
     }
 
-    window.alert('Válassz műveletet: add vagy replace.');
+    window.alert('Válassz műveletet: hozzáadás vagy csere.');
   };
 
   const handleOpenSavePreset = () => {

@@ -59,7 +59,12 @@ export function GroceryListPanel({
           onChange={(e) => onNewItemNameChange(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && addItem()}
         />
-        <button style={styles.addBtn} onClick={addItem}>
+        <button
+          type='button'
+          style={styles.addBtn}
+          onClick={addItem}
+          aria-label='Tétel hozzáadása'
+        >
           +
         </button>
       </div>
@@ -72,14 +77,14 @@ export function GroceryListPanel({
               style={{ ...styles.ghostBtn, ...styles.actionBtnHalf }}
               onClick={onOpenSavePreset}
             >
-              💾 Mentés listaként
+              💾 Mentés
             </button>
             <button
               type='button'
               style={{ ...styles.ghostBtn, ...styles.dangerBtn, ...styles.actionBtnHalf }}
               onClick={onClearAll}
             >
-              🗑 Mind törlése
+              🗑 Lista törése
             </button>
           </div>
           {boughtCount > 0 && (
@@ -123,7 +128,7 @@ export function GroceryListPanel({
           {neededItems.length > 0 && (
             <section style={styles.section}>
               <div style={styles.sectionLabel}>
-                <span style={styles.sectionDot({ color: '#22c55e' })} />
+                <span style={styles.sectionDot({ color: 'var(--success)' })} />
                 Megvenni ({neededItems.length})
                 {loadedPresetName ? ` - ${loadedPresetName}` : ''}
               </div>
@@ -154,7 +159,9 @@ export function GroceryListPanel({
           {haveItems.length > 0 && (
             <section style={styles.section}>
               <div style={styles.sectionLabel}>
-                <span style={styles.sectionDot({ color: '#94a3b8' })} />
+                <span
+                  style={styles.sectionDot({ color: 'var(--muted-2)' })}
+                />
                 Már megvan ({haveItems.length})
               </div>
               {haveItems.map((item) => (

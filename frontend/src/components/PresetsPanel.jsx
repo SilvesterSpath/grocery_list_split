@@ -69,14 +69,18 @@ export function PresetsPanel({
               </div>
               <div style={styles.presetCardActions}>
                 <button
+                  type='button'
                   style={styles.presetLoadBtn}
                   onClick={() => requestLoadPreset(name)}
                 >
                   Betöltés
                 </button>
                 <button
+                  type='button'
                   style={styles.presetDeleteBtn}
                   onClick={() => onDeletePreset(name)}
+                  aria-label={`Mentett lista törlése: ${name}`}
+                  title={`Mentett lista törlése: ${name}`}
                 >
                   ✕
                 </button>
@@ -102,7 +106,7 @@ export function PresetsPanel({
                 >
                   {expandedPresets[name]
                     ? 'Kevesebb'
-                    : `+${itemNames.length - 8} more`}
+                    : `+${itemNames.length - 8} további`}
                 </button>
               )}
             </div>
@@ -118,16 +122,17 @@ export function PresetsPanel({
               style={styles.modalInput}
               value={loadMode}
               onChange={(e) => setLoadMode(e.target.value)}
+              aria-label='Betöltési mód'
             >
-              <option value='replace'>replace (csere)</option>
-              <option value='add'>add (hozzáadás)</option>
+              <option value='replace'>Csere (a jelenlegi lista helyett)</option>
+              <option value='add'>Hozzáadás (a jelenlegi listához)</option>
             </select>
             <div style={styles.modalBtns}>
-              <button style={styles.modalCancel} onClick={closeLoadModal}>
+              <button type='button' style={styles.modalCancel} onClick={closeLoadModal}>
                 Mégse
               </button>
-              <button style={styles.modalSave} onClick={confirmLoad}>
-                OK
+              <button type='button' style={styles.modalSave} onClick={confirmLoad}>
+                Rendben
               </button>
             </div>
           </div>

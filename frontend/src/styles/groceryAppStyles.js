@@ -16,6 +16,10 @@
     --danger: #dc2626;
     --danger-border: #fecaca;
     --ring: rgba(232, 120, 58, 0.28);
+    --text-on-accent: #ffffff;
+    --overlay-scrim: rgba(44, 36, 22, 0.42);
+    --overlay-scrim-soft: rgba(44, 36, 22, 0.34);
+    --drag-handle: color-mix(in srgb, var(--muted) 48%, var(--border));
   }
 
   :root[data-theme="dark"]{
@@ -34,11 +38,37 @@
     --danger: #f87171;
     --danger-border: rgba(248, 113, 113, 0.38);
     --ring: rgba(255, 122, 47, 0.35);
+    --text-on-accent: #ffffff;
+    --overlay-scrim: rgba(0, 0, 0, 0.55);
+    --overlay-scrim-soft: rgba(0, 0, 0, 0.48);
+    --drag-handle: color-mix(in srgb, var(--muted-2) 70%, var(--border));
+  }
+
+  .kamra-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  button:focus-visible,
+  [role='tab']:focus-visible,
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body { background: var(--bg); color: var(--text); }
+  select { cursor: pointer; }
   ::selection{ background: var(--ring); }
   a, button, input { color: inherit; }
   button{ -webkit-tap-highlight-color: transparent; }
@@ -115,7 +145,7 @@ export const styles = {
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
     transition: 'transform 0.08s, background 0.15s, border-color 0.15s',
   },
 
@@ -190,7 +220,7 @@ export const styles = {
     borderRadius: 10,
     background: 'var(--surface)',
     color: 'var(--text)',
-    outline: 'none',
+    cursor: 'text',
     transition: 'border-color 0.15s, box-shadow 0.15s',
   },
 
@@ -198,7 +228,7 @@ export const styles = {
     width: 44,
     height: 44,
     background: 'var(--accent)',
-    color: '#fff',
+    color: 'var(--text-on-accent)',
     border: 'none',
     borderRadius: 10,
     fontSize: 22,
@@ -319,7 +349,7 @@ export const styles = {
 
   dragHandle: {
     fontSize: 16,
-    color: '#c8bfb2',
+    color: 'var(--drag-handle)',
     cursor: 'grab',
     flexShrink: 0,
     lineHeight: 1,
@@ -330,10 +360,6 @@ export const styles = {
     alignItems: 'center',
     cursor: 'pointer',
     flexShrink: 0,
-  },
-
-  checkboxInput: {
-    display: 'none',
   },
 
   customCheck: {
@@ -355,7 +381,7 @@ export const styles = {
   },
 
   checkMark: {
-    color: '#fff',
+    color: 'var(--text-on-accent)',
     fontSize: 11,
     fontWeight: 700,
     lineHeight: 1,
@@ -363,7 +389,7 @@ export const styles = {
 
   itemName: {
     flex: 1,
-    minWidth: 190,
+    minWidth: 0,
     fontSize: 21,
     fontWeight: 500,
     color: 'var(--text)',
@@ -383,7 +409,7 @@ export const styles = {
 
   editInput: {
     flex: 1,
-    minWidth: 190,
+    minWidth: 0,
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 14,
     fontWeight: 500,
@@ -392,7 +418,7 @@ export const styles = {
     borderRadius: 6,
     background: 'var(--surface)',
     color: 'var(--text)',
-    outline: 'none',
+    cursor: 'text',
   },
 
   toggleLabel: {
@@ -412,7 +438,7 @@ export const styles = {
   },
 
   toggleOn: {
-    background: '#22c55e',
+    background: 'var(--success)',
     justifyContent: 'flex-end',
   },
 
@@ -426,7 +452,8 @@ export const styles = {
     height: 14,
     borderRadius: '50%',
     background: 'var(--surface)',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.22)',
+    boxShadow:
+      '0 8px 20px color-mix(in srgb, var(--text) 22%, transparent)',
     transition: 'all 0.2s',
     flexShrink: 0,
   },
@@ -528,7 +555,7 @@ export const styles = {
     border: 'none',
     borderRadius: 8,
     background: 'var(--accent)',
-    color: '#fff',
+    color: 'var(--text-on-accent)',
     cursor: 'pointer',
     transition: 'background 0.15s',
   },
@@ -572,7 +599,7 @@ export const styles = {
   modalOverlay: {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(44,36,22,0.4)',
+    background: 'var(--overlay-scrim)',
     zIndex: 200,
     display: 'flex',
     alignItems: 'center',
@@ -606,7 +633,6 @@ export const styles = {
     width: '100%',
     marginBottom: 14,
     color: 'var(--text)',
-    outline: 'none',
     background: 'var(--surface)',
   },
 
@@ -636,14 +662,14 @@ export const styles = {
     border: 'none',
     borderRadius: 8,
     background: 'var(--accent)',
-    color: '#fff',
+    color: 'var(--text-on-accent)',
     cursor: 'pointer',
   },
 
   startupSyncOverlay: {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(44,36,22,0.34)',
+    background: 'var(--overlay-scrim-soft)',
     zIndex: 300,
     display: 'flex',
     alignItems: 'center',

@@ -7,19 +7,33 @@ export function StartupSyncModal() {
   const [gifLoadFailed, setGifLoadFailed] = useState(false);
 
   return (
-    <div style={styles.startupSyncOverlay} role='dialog' aria-modal='true'>
+    <div
+      style={styles.startupSyncOverlay}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby='kamra-startup-sync-title'
+      aria-busy='true'
+    >
       <div style={styles.startupSyncModal}>
         {gifLoadFailed ? (
-          <div style={styles.startupSyncFallback}>🥕🥕🥕</div>
+          <div style={styles.startupSyncFallback} aria-hidden='true'>
+            🥕🥕🥕
+          </div>
         ) : (
           <img
             src={STARTUP_SYNC_GIF_SRC}
-            alt='Sync animation'
+            alt='Betöltés: lista szinkronizálása'
             style={styles.startupSyncGif}
             onError={() => setGifLoadFailed(true)}
           />
         )}
-        <div style={styles.startupSyncText}>Syncing your lists...</div>
+        <div
+          id='kamra-startup-sync-title'
+          style={styles.startupSyncText}
+          aria-live='polite'
+        >
+          Listák szinkronizálása…
+        </div>
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ export function SavePresetModal({
           </>
         )}
         <input
-          style={styles.modalInput}
+          style={{ ...styles.modalInput, cursor: 'text' }}
           autoFocus
           list='preset-name-suggestions'
           placeholder='Lista neve…'
@@ -75,15 +75,17 @@ export function SavePresetModal({
           </datalist>
         )}
         {typeof errorMessage === 'string' && errorMessage.trim() !== '' && (
-          <div style={{ marginBottom: 14, color: '#dc2626', fontSize: 12 }}>
+          <div
+            style={{ marginBottom: 14, color: 'var(--danger)', fontSize: 12 }}
+          >
             {errorMessage}
           </div>
         )}
         <div style={styles.modalBtns}>
-          <button style={styles.modalCancel} onClick={onClose}>
+          <button type='button' style={styles.modalCancel} onClick={onClose}>
             Mégse
           </button>
-          <button style={styles.modalSave} onClick={onSave}>
+          <button type='button' style={styles.modalSave} onClick={onSave}>
             Mentés
           </button>
         </div>
