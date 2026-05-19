@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { ItemRow } from './ItemRow.jsx';
 import { SavePresetModal } from './SavePresetModal.jsx';
 import { styles } from '../styles/groceryAppStyles.js';
@@ -41,37 +41,11 @@ export function GroceryListPanel({
   onDragEnd,
 }) {
   const inputRef = useRef(null);
-  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
-  const actionsMenuWrapRef = useRef(null);
-  const actionsMenuBtnRef = useRef(null);
 
   const addItem = () => {
     onAddItem();
     inputRef.current?.focus();
   };
-
-  useEffect(() => {
-    if (!isActionsMenuOpen) return;
-
-    const onDocumentMouseDown = (e) => {
-      if (!actionsMenuWrapRef.current?.contains(e.target)) {
-        setIsActionsMenuOpen(false);
-      }
-    };
-    const onDocumentKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setIsActionsMenuOpen(false);
-        actionsMenuBtnRef.current?.focus();
-      }
-    };
-
-    document.addEventListener('mousedown', onDocumentMouseDown);
-    document.addEventListener('keydown', onDocumentKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', onDocumentMouseDown);
-      document.removeEventListener('keydown', onDocumentKeyDown);
-    };
-  }, [isActionsMenuOpen]);
 
   return (
     <>
@@ -96,22 +70,17 @@ export function GroceryListPanel({
 
       <div style={styles.actionsBlock}>
         <div style={styles.actionsRowSplit}>
-          <button
-            className='kamra-btn-save'
-            type='button'
-            style={{
-              ...styles.ghostBtn,
-              ...styles.actionBtnHalf,
-              ...styles.actionBtnPrimary,
-            }}
-            onClick={onOpenSavePreset}
-          >
-            💾 Mentés
-          </button>
-          <div
-            ref={actionsMenuWrapRef}
-            style={{ ...styles.actionLoadGroup, ...styles.actionBtnHalf }}
-          >
+          <div style={{ ...styles.actionLoadGroup, ...styles.actionBtnHalf }}>
+            <button
+              className='kamra-btn-save'
+              type='button'
+              style={styles.actionLoadBtn}
+              onClick={onOpenSavePreset}
+            >
+              💾 Mentés
+            </button>
+          </div>
+          <div style={{ ...styles.actionLoadGroup, ...styles.actionBtnHalf }}>
             <button
               className='kamra-btn-load'
               type='button'
@@ -121,41 +90,15 @@ export function GroceryListPanel({
               📂 Lista betöltése
             </button>
             <button
-              className='kamra-btn-list-menu'
-              ref={actionsMenuBtnRef}
+              className='kamra-btn-clear-list'
               type='button'
-              aria-label='Lista műveletek'
-              aria-haspopup='menu'
-              aria-expanded={isActionsMenuOpen}
-              style={styles.actionLoadMenuBtn}
-              onClick={() => setIsActionsMenuOpen((open) => !open)}
-              onMouseDown={(e) => e.stopPropagation()}
+              aria-label='Lista törlése'
+              title='Lista törlése'
+              style={styles.actionClearListBtn}
+              onClick={onClearAll}
             >
-              ⋯
+              ✕
             </button>
-            {isActionsMenuOpen && (
-              <div
-                role='menu'
-                aria-label='Lista műveletek menü'
-                style={styles.actionsMenuDropdown}
-                onMouseDown={(e) => e.stopPropagation()}
-              >
-                <button
-                  type='button'
-                  role='menuitem'
-                  style={{
-                    ...styles.actionsMenuItem,
-                    ...styles.actionsMenuItemDanger,
-                  }}
-                  onClick={() => {
-                    setIsActionsMenuOpen(false);
-                    onClearAll();
-                  }}
-                >
-                  Lista törlése
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

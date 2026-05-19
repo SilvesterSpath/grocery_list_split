@@ -74,24 +74,23 @@
     background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
   }
 
-  .kamra-btn-save:hover {
-    background: color-mix(in srgb, var(--surface-2) 65%, var(--surface));
-    border-color: color-mix(in srgb, var(--border) 75%, var(--muted));
-    color: color-mix(in srgb, var(--text) 88%, var(--muted));
-  }
-
+  .kamra-btn-save:hover,
   .kamra-btn-load:hover {
     background: color-mix(in srgb, var(--surface-2) 45%, var(--surface));
     color: color-mix(in srgb, var(--muted) 85%, var(--text));
   }
 
-  .kamra-btn-list-menu:hover,
+  .kamra-btn-clear-list:hover {
+    background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+    color: var(--danger);
+  }
+
   .kamra-row-menu-btn:hover {
     background: color-mix(in srgb, var(--surface-2) 55%, var(--surface));
     color: color-mix(in srgb, var(--muted) 82%, var(--text));
   }
 
-  .kamra-btn-list-menu:active,
+  .kamra-btn-clear-list:active,
   .kamra-row-menu-btn:active,
   .kamra-btn-save:active,
   .kamra-btn-load:active {
@@ -323,12 +322,12 @@ export const styles = {
     transition: 'background-color 0.15s, color 0.15s, transform 0.12s',
   },
 
-  actionLoadMenuBtn: {
+  actionClearListBtn: {
     fontFamily: "'DM Sans', sans-serif",
-    fontSize: 18,
-    fontWeight: 700,
+    fontSize: 14,
+    fontWeight: 600,
     lineHeight: 1,
-    color: 'color-mix(in srgb, var(--muted) 80%, var(--text))',
+    color: 'var(--danger)',
     background: 'transparent',
     border: 'none',
     borderLeft: '1px solid color-mix(in srgb, var(--border) 78%, var(--surface-2))',
@@ -366,52 +365,9 @@ export const styles = {
     transition: 'all 0.15s',
   },
 
-  actionBtnPrimary: {
-    background: 'color-mix(in srgb, var(--surface-2) 48%, var(--surface))',
-    color: 'color-mix(in srgb, var(--text) 88%, var(--muted))',
-    borderColor: 'color-mix(in srgb, var(--border) 72%, var(--muted))',
-  },
-
   dangerBtn: {
     color: 'var(--danger)',
     borderColor: 'var(--danger-border)',
-  },
-
-  actionsMenuWrap: {
-    position: 'relative',
-    flexShrink: 1,
-  },
-
-  actionsMenuDropdown: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    marginTop: 4,
-    minWidth: 160,
-    background: 'var(--surface)',
-    border: '1px solid color-mix(in srgb, var(--border) 82%, var(--surface-2))',
-    borderRadius: 10,
-    boxShadow: '0 6px 18px color-mix(in srgb, var(--text) 10%, transparent)',
-    zIndex: 70,
-    overflow: 'hidden',
-  },
-
-  actionsMenuItem: {
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 13,
-    fontWeight: 500,
-    width: '100%',
-    textAlign: 'left',
-    padding: '10px 12px',
-    background: 'var(--surface)',
-    border: 'none',
-    color: 'var(--text)',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s, color 0.15s',
-  },
-
-  actionsMenuItemDanger: {
-    color: 'var(--danger)',
   },
 
   section: {
