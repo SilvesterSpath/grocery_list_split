@@ -277,22 +277,23 @@ export const styles = {
 
   zoneSelector: {
     display: 'flex',
-    gap: 6,
+    flexWrap: 'wrap',
+    gap: 5,
     marginBottom: 8,
     width: '100%',
   },
 
   zoneSelectorOption: ({ selected }) => ({
-    flex: 1,
+    flex: '1 1 22%',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
+    gap: 4,
     minWidth: 0,
-    minHeight: 38,
-    padding: '6px 8px',
+    minHeight: 36,
+    padding: '5px 6px',
     fontFamily: "'DM Sans', sans-serif",
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: selected ? 600 : 500,
     color: selected ? 'var(--text)' : 'color-mix(in srgb, var(--muted) 35%, var(--text))',
     background: selected
@@ -318,6 +319,10 @@ export const styles = {
         background: 'color-mix(in srgb, var(--success) 35%, transparent)',
         border:
           '1px solid color-mix(in srgb, var(--success) 50%, var(--border))',
+      },
+      na: {
+        background: 'transparent',
+        border: '1px dashed var(--muted-2)',
       },
     };
     const style = colors[variant] ?? colors.front;
@@ -511,6 +516,7 @@ export const styles = {
   },
 
   itemRowZoneTint: (storeZone) => {
+    if (storeZone === 'na') return {};
     const zoneBg = {
       front: 'var(--zone-front-bg)',
       middle: 'var(--zone-middle-bg)',

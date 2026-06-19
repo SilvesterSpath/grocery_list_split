@@ -2,6 +2,7 @@ export const STORE_ZONES = [
   { id: 'front', label: 'Elöl', order: 0 },
   { id: 'middle', label: 'Középen', order: 1 },
   { id: 'back', label: 'Hátul', order: 2 },
+  { id: 'na', label: 'N/A', order: 3 },
 ];
 
 export const DEFAULT_STORE_ZONE = 'front';
@@ -85,18 +86,14 @@ export function insertItemAtZoneTop(items, newItem) {
   return next;
 }
 
-/** Megvenni items in front → middle → back blocks; within-zone order unchanged. */
+/** Megvenni items in STORE_ZONES walk order; within-zone order unchanged. */
 export function sortNeededByZoneBlocks(neededItems) {
-  const front = [];
-  const middle = [];
-  const back = [];
+  const buckets = Object.fromEntries(STORE_ZONES.map((z) => [z.id, []]));
   for (const item of neededItems) {
     const zone = normalizeStoreZone(item.storeZone);
-    if (zone === 'front') front.push(item);
-    else if (zone === 'middle') middle.push(item);
-    else back.push(item);
+    buckets[zone].push(item);
   }
-  return [...front, ...middle, ...back];
+  return STORE_ZONES.flatMap((z) => buckets[z.id]);
 }
 
 function partitionListSegments(items) {
@@ -113,8 +110,8 @@ function partitionListSegments(items) {
 
 /**
  * Canonical walk order in items[]:
- * 1. Megvenni active (needed, !bought) — front → middle → back
- * 2. Megvenni kosár (needed, bought) — front → middle → back
+ * 1. Megvenni active (needed, !bought) — front → middle → back → na
+ * 2. Megvenni kosár (needed, bought) — front → middle → back → na
  * 3. Már megvan (!needed)
  */
 export function ensureListWalkOrder(items) {
