@@ -928,6 +928,14 @@ export const styles = {
     color: 'var(--text)',
   },
 
+  modalMessage: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 14,
+    lineHeight: 1.45,
+    color: 'var(--muted)',
+    marginBottom: 18,
+  },
+
   modalInput: {
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 15,
@@ -967,6 +975,18 @@ export const styles = {
     borderRadius: 8,
     background: 'var(--accent)',
     color: 'var(--text-on-accent)',
+    cursor: 'pointer',
+  },
+
+  modalDanger: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 13,
+    fontWeight: 600,
+    padding: '8px 16px',
+    border: '1px solid var(--danger-border)',
+    borderRadius: 8,
+    background: 'color-mix(in srgb, var(--danger) 12%, var(--surface))',
+    color: 'var(--danger)',
     cursor: 'pointer',
   },
 

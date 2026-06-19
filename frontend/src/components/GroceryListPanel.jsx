@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { ClearListConfirmModal } from './ClearListConfirmModal.jsx';
 import { ItemRow } from './ItemRow.jsx';
 import { SavePresetModal } from './SavePresetModal.jsx';
 import { styles } from '../styles/groceryAppStyles.js';
@@ -45,6 +46,16 @@ export function GroceryListPanel({
   onDragEnd,
 }) {
   const inputRef = useRef(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  useEffect(() => {
+    if (!showClearConfirm) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setShowClearConfirm(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [showClearConfirm]);
 
   const addItem = () => {
     onAddItem();
@@ -126,13 +137,23 @@ export function GroceryListPanel({
               aria-label='Lista törlése'
               title='Lista törlése'
               style={styles.actionClearListBtn}
-              onClick={onClearAll}
+              onClick={() => setShowClearConfirm(true)}
             >
               ✕
             </button>
           </div>
         </div>
       </div>
+
+      {showClearConfirm && (
+        <ClearListConfirmModal
+          onClose={() => setShowClearConfirm(false)}
+          onConfirm={() => {
+            onClearAll();
+            setShowClearConfirm(false);
+          }}
+        />
+      )}
 
       {showSavePreset && (
         <SavePresetModal

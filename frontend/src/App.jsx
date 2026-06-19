@@ -305,8 +305,6 @@ export default function GroceryApp() {
   };
 
   const clearAll = () => {
-    const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
-    if (!shouldClear) return;
     setItems([]);
     setLoadedPresetName('');
   };
