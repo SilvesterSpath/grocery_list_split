@@ -166,6 +166,7 @@ export function GroceryListPanel({
                 <ItemRow
                   key={item.id}
                   item={item}
+                  showZoneTint
                   editingId={editingId}
                   editingName={editingName}
                   setEditingName={setEditingName}

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
+import { normalizeStoreZone } from '../utils/storeZones.js';
 
 export function ItemRow({
   item,
+  showZoneTint = false,
   editingId,
   editingName,
   setEditingName,
@@ -79,6 +81,10 @@ export function ItemRow({
     onDelete(item.id);
   };
 
+  const storeZone = normalizeStoreZone(item.storeZone);
+  const zoneTintStyle =
+    showZoneTint && !item.bought ? styles.itemRowZoneTint(storeZone) : {};
+
   return (
     <div
       className='kamra-item-row'
@@ -89,6 +95,7 @@ export function ItemRow({
       onDragEnd={onDragEnd}
       style={{
         ...styles.itemRow,
+        ...zoneTintStyle,
         ...(isDragging ? styles.itemDragging : {}),
         ...(isDragOver ? styles.itemDragOver : {}),
         ...(item.bought ? styles.itemBought : {}),

@@ -23,6 +23,9 @@
     --row-border: color-mix(in srgb, var(--border) 78%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 94%, var(--bg));
     --toggle-on: color-mix(in srgb, var(--muted) 46%, var(--surface-2));
+    --zone-front-bg: color-mix(in srgb, var(--row-surface) 98%, var(--text));
+    --zone-middle-bg: color-mix(in srgb, #eab308 9%, var(--row-surface));
+    --zone-back-bg: color-mix(in srgb, var(--success) 10%, var(--row-surface));
   }
 
   :root[data-theme="dark"]{
@@ -48,6 +51,9 @@
     --row-border: color-mix(in srgb, var(--border) 88%, var(--surface));
     --row-surface: color-mix(in srgb, var(--surface) 96%, var(--bg));
     --toggle-on: color-mix(in srgb, var(--muted-2) 54%, var(--surface-2));
+    --zone-front-bg: color-mix(in srgb, var(--row-surface) 90%, var(--text));
+    --zone-middle-bg: color-mix(in srgb, #eab308 14%, var(--row-surface));
+    --zone-back-bg: color-mix(in srgb, var(--success) 14%, var(--row-surface));
   }
 
   .kamra-sr-only {
@@ -98,8 +104,11 @@
   }
 
   .kamra-item-row:hover {
-    background: color-mix(in srgb, var(--row-surface) 82%, var(--surface-2))
-      !important;
+    background: color-mix(
+      in srgb,
+      var(--row-zone-bg, var(--row-surface)) 78%,
+      var(--surface-2)
+    ) !important;
     border-color: color-mix(in srgb, var(--row-border) 70%, var(--muted-2))
       !important;
   }
@@ -472,6 +481,19 @@ export const styles = {
     transition: 'all 0.15s',
     cursor: 'default',
     userSelect: 'none',
+  },
+
+  itemRowZoneTint: (storeZone) => {
+    const zoneBg = {
+      front: 'var(--zone-front-bg)',
+      middle: 'var(--zone-middle-bg)',
+      back: 'var(--zone-back-bg)',
+    };
+    const background = zoneBg[storeZone] ?? zoneBg.front;
+    return {
+      background,
+      '--row-zone-bg': background,
+    };
   },
 
   itemRowMenuOpen: {

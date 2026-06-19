@@ -79,6 +79,23 @@ export function insertItemAtZoneTop(items, newItem) {
   return next;
 }
 
+/** Move a needed item to the top of its target zone block (for Phase 4 zone changes). */
+export function moveNeededItemToZoneTop(items, itemId, targetZone) {
+  const zone = normalizeStoreZone(targetZone);
+  const idx = items.findIndex((i) => i.id === itemId);
+  if (idx === -1) return items;
+
+  const item = { ...items[idx], storeZone: zone };
+  if (!item.needed) {
+    const next = [...items];
+    next[idx] = item;
+    return next;
+  }
+
+  const without = [...items.slice(0, idx), ...items.slice(idx + 1)];
+  return insertItemAtZoneTop(without, item);
+}
+
 export function presetEntriesToFrontendItems(entries) {
   if (!Array.isArray(entries)) return [];
 
