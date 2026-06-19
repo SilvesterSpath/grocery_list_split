@@ -1,3 +1,5 @@
+import { DEFAULT_STORE_ZONE, normalizeStoreZone, newId } from './storeZones.js';
+
 export const STORAGE_KEY = 'grocery_app_v1';
 export const THEME_KEY = 'grocery_app_theme_v1';
 
@@ -115,11 +117,7 @@ export function saveTheme(theme) {
   }
 }
 
-let idCounter = Date.now();
-export function newId() {
-  return `item_${idCounter++}`;
-}
-
-export function makeItem(name) {
-  return { id: newId(), name, needed: true, bought: false };
+export function makeItem(name, options) {
+  const storeZone = normalizeStoreZone(options?.storeZone ?? DEFAULT_STORE_ZONE);
+  return { id: newId(), name, needed: true, bought: false, storeZone };
 }

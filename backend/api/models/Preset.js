@@ -10,7 +10,7 @@ const PresetSchema = new mongoose.Schema(
       trim: true,
     },
     itemsNames: {
-      type: [String],
+      type: [mongoose.Schema.Types.Mixed],
       default: [],
     },
   },

@@ -1,6 +1,7 @@
 import express from 'express';
 import GlobalState from '../models/GlobalState.js';
 import Preset from '../models/Preset.js';
+import { isValidStoreZone, normalizeStoreZone } from '../storeZones.js';
 
 const router = express.Router();
 
@@ -13,8 +14,16 @@ function isValidItemShape(obj) {
     typeof obj.name === 'string' &&
     obj.name.trim() !== '' &&
     typeof obj.needed === 'boolean' &&
-    typeof obj.bought === 'boolean'
+    typeof obj.bought === 'boolean' &&
+    isValidStoreZone(obj.storeZone)
   );
+}
+
+function normalizeListItem(item) {
+  return {
+    ...item,
+    storeZone: normalizeStoreZone(item.storeZone),
+  };
 }
 
 function itemsFromLegacyNames(itemsNames) {
@@ -26,12 +35,15 @@ function itemsFromLegacyNames(itemsNames) {
       name,
       needed: true,
       bought: false,
+      storeZone: 'front',
     }));
 }
 
 function resolveItems(globalDoc) {
   const raw = globalDoc?.items;
-  if (Array.isArray(raw) && raw.every(isValidItemShape)) return raw;
+  if (Array.isArray(raw) && raw.every(isValidItemShape)) {
+    return raw.map(normalizeListItem);
+  }
   return itemsFromLegacyNames(globalDoc?.itemsNames);
 }
 

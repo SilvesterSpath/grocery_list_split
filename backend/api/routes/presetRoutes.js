@@ -1,12 +1,21 @@
 import express from 'express';
 import Preset from '../models/Preset.js';
+import { isValidStoreZone } from '../storeZones.js';
 
 const router = express.Router();
 
-function isStringArray(value) {
-  return (
-    Array.isArray(value) && value.every((v) => typeof v === 'string' && v.trim() !== '')
-  );
+function isValidPresetEntry(entry) {
+  if (typeof entry === 'string') {
+    return entry.trim() !== '';
+  }
+  if (entry && typeof entry === 'object' && typeof entry.name === 'string') {
+    return entry.name.trim() !== '' && isValidStoreZone(entry.storeZone);
+  }
+  return false;
+}
+
+function isValidPresetEntriesArray(value) {
+  return Array.isArray(value) && value.every(isValidPresetEntry);
 }
 
 router.post('/presets', async (req, res) => {
@@ -16,10 +25,11 @@ router.post('/presets', async (req, res) => {
     if (typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ message: 'name must be a non-empty string' });
     }
-    if (!isStringArray(itemsNames)) {
-      return res
-        .status(400)
-        .json({ message: 'itemsNames must be a non-empty string[]' });
+    if (!isValidPresetEntriesArray(itemsNames)) {
+      return res.status(400).json({
+        message:
+          'itemsNames must be an array of non-empty strings or { name, storeZone? } objects',
+      });
     }
 
     const normalizedName = name.trim();
@@ -36,7 +46,6 @@ router.post('/presets', async (req, res) => {
 
     res.status(201).json({ name: created.name, itemsNames: created.itemsNames });
   } catch (error) {
-    // Unique index collision (extra safety)
     if (error?.code === 11000) {
       return res.status(409).json({ message: 'Preset already exists' });
     }
@@ -52,10 +61,11 @@ router.put('/presets/:name', async (req, res) => {
     if (typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ message: 'Invalid preset name' });
     }
-    if (!isStringArray(itemsNames)) {
-      return res
-        .status(400)
-        .json({ message: 'itemsNames must be a non-empty string[]' });
+    if (!isValidPresetEntriesArray(itemsNames)) {
+      return res.status(400).json({
+        message:
+          'itemsNames must be an array of non-empty strings or { name, storeZone? } objects',
+      });
     }
 
     const normalizedName = name.trim();
@@ -88,4 +98,3 @@ router.delete('/presets/:name', async (req, res) => {
 });
 
 export default router;
-

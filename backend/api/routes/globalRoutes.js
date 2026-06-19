@@ -1,5 +1,6 @@
 import express from 'express';
 import GlobalState from '../models/GlobalState.js';
+import { isValidStoreZone, normalizeStoreZone } from '../storeZones.js';
 
 const router = express.Router();
 
@@ -12,12 +13,20 @@ function isValidItem(obj) {
     typeof obj.name === 'string' &&
     obj.name.trim() !== '' &&
     typeof obj.needed === 'boolean' &&
-    typeof obj.bought === 'boolean'
+    typeof obj.bought === 'boolean' &&
+    isValidStoreZone(obj.storeZone)
   );
 }
 
 function isValidItemsArray(value) {
   return Array.isArray(value) && value.every(isValidItem);
+}
+
+function normalizeItemsForSave(items) {
+  return items.map((item) => ({
+    ...item,
+    storeZone: normalizeStoreZone(item.storeZone),
+  }));
 }
 
 router.put('/global', async (req, res) => {
@@ -27,7 +36,7 @@ router.put('/global', async (req, res) => {
     if (!isValidItemsArray(items)) {
       return res.status(400).json({
         message:
-          'items must be an array (possibly empty) of { id, name, needed, bought }',
+          'items must be an array (possibly empty) of { id, name, needed, bought, storeZone? }',
       });
     }
 
@@ -43,11 +52,13 @@ router.put('/global', async (req, res) => {
     const normalizedActivePresetName =
       typeof activePresetName === 'string' ? activePresetName.trim() : undefined;
 
+    const normalizedItems = normalizeItemsForSave(items);
+
     const updated = await GlobalState.findByIdAndUpdate(
       'global',
       {
         $set: {
-          items,
+          items: normalizedItems,
           ...(typeof normalizedActivePresetName === 'string'
             ? { activePresetName: normalizedActivePresetName }
             : {}),

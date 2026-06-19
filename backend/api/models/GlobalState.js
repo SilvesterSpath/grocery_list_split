@@ -6,6 +6,11 @@ const ListItemSchema = new mongoose.Schema(
     name: { type: String, required: true },
     needed: { type: Boolean, required: true },
     bought: { type: Boolean, required: true },
+    storeZone: {
+      type: String,
+      enum: ['front', 'middle', 'back'],
+      default: 'front',
+    },
   },
   { _id: false },
 );

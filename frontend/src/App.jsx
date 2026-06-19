@@ -19,6 +19,12 @@ import {
   translateKnownItemsInList,
   translateKnownPresets,
 } from './utils/groceryHelpers.js';
+import { normalizeItem } from './utils/storeZones.js';
+
+function normalizeItemsInList(items) {
+  if (!Array.isArray(items)) return [];
+  return items.map((item) => normalizeItem(item));
+}
 
 export default function GroceryApp() {
   const allowListAutoSave = useRef(false);
@@ -58,7 +64,9 @@ export default function GroceryApp() {
         if (cancelled) {
           return;
         }
-        setItems(translateKnownItemsInList(apiItems ?? []));
+        setItems(
+          normalizeItemsInList(translateKnownItemsInList(apiItems ?? [])),
+        );
         setPresets(translateKnownPresets(apiPresets ?? defaultLists));
         setLoadedPresetName(
           typeof activePresetName === 'string' ? activePresetName : '',
