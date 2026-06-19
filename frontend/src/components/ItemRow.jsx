@@ -72,11 +72,6 @@ export function ItemRow({
     ? 'Kosárba jelölés csak a Megvenni tételeknél elérhető'
     : boughtLabel;
 
-  const handleEditPick = () => {
-    setMenuOpen(false);
-    onStartEdit(item);
-  };
-
   const handleDeletePick = () => {
     setMenuOpen(false);
     onDelete(item.id);
@@ -247,28 +242,17 @@ export function ItemRow({
             onKeyDown={handleMenuKeyDown}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            {!isEditing ? (
-              <button
-                ref={firstMenuItemRef}
-                type='button'
-                role='menuitem'
-                style={styles.rowMenuItem}
-                onClick={handleEditPick}
-              >
-                Szerkesztés
-              </button>
-            ) : null}
             <div
               role='group'
               aria-label='Boltban hely'
               style={styles.rowMenuZoneGroup}
             >
-              <div style={styles.rowMenuSectionLabel}>Boltban hely</div>
-              {STORE_ZONES.map(({ id, label }) => {
+              {STORE_ZONES.map(({ id, label }, index) => {
                 const checked = storeZone === id;
                 return (
                   <button
                     key={id}
+                    ref={index === 0 ? firstMenuItemRef : null}
                     type='button'
                     role='menuitemradio'
                     aria-checked={checked}
@@ -287,7 +271,6 @@ export function ItemRow({
               })}
             </div>
             <button
-              ref={isEditing ? firstMenuItemRef : null}
               type='button'
               role='menuitem'
               className='kamra-menu-item-danger'
