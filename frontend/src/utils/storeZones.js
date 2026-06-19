@@ -137,6 +137,15 @@ export function ensureNeededZoneBlockOrder(items) {
   return ensureListWalkOrder(items);
 }
 
+/** Whether a drag-drop may reorder source onto target (Phase 5). */
+export function canReorderByDrag(source, target) {
+  if (!source || !target || source.id === target.id) return false;
+  if (source.needed !== target.needed) return false;
+  if (!source.needed) return true;
+  if (!!source.bought !== !!target.bought) return false;
+  return normalizeStoreZone(source.storeZone) === normalizeStoreZone(target.storeZone);
+}
+
 /** Move a needed item to the top of its target zone block; Már megvan updates zone in place. */
 export function moveNeededItemToZoneTop(items, itemId, targetZone) {
   const zone = normalizeStoreZone(targetZone);

@@ -21,6 +21,7 @@ import {
 } from './utils/groceryHelpers.js';
 import {
   DEFAULT_STORE_ZONE,
+  canReorderByDrag,
   ensureListWalkOrder,
   frontendItemsToPresetEntries,
   insertItemAtZoneTop,
@@ -327,13 +328,29 @@ export default function GroceryApp() {
   };
   const handleDragOver = (e, id) => {
     e.preventDefault();
+    const source = items.find((i) => i.id === dragState);
+    const target = items.find((i) => i.id === id);
+    if (!source || !target || !canReorderByDrag(source, target)) {
+      e.dataTransfer.dropEffect = 'none';
+      setDragOver(null);
+      return;
+    }
     e.dataTransfer.dropEffect = 'move';
     setDragOver(id);
   };
   const handleDrop = (e, targetId) => {
     e.preventDefault();
-    if (!dragState || dragState === targetId) return;
+    if (!dragState || dragState === targetId) {
+      setDragState(null);
+      setDragOver(null);
+      return;
+    }
     setItems((prev) => {
+      const source = prev.find((i) => i.id === dragState);
+      const target = prev.find((i) => i.id === targetId);
+      if (!source || !target || !canReorderByDrag(source, target)) {
+        return prev;
+      }
       const next = [...prev];
       const fromIdx = next.findIndex((i) => i.id === dragState);
       const toIdx = next.findIndex((i) => i.id === targetId);
