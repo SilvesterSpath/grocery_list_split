@@ -84,6 +84,28 @@
     background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
   }
 
+  .kamra-zone-option:hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+
+  .kamra-zone-option:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  button[role='menuitem'].kamra-menu-item-danger:hover,
+  button[role='menuitemradio'][aria-checked='true'] {
+    background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
+  }
+
+  button[role='menuitemradio'][aria-checked='true'] {
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  }
+
+  button[role='menuitem'].kamra-menu-item-danger:hover {
+    background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  }
+
   .kamra-btn-save:hover,
   .kamra-btn-load:hover {
     background: color-mix(in srgb, var(--surface-2) 45%, var(--surface));
@@ -267,18 +289,19 @@ export const styles = {
     justifyContent: 'center',
     gap: 5,
     minWidth: 0,
-    padding: '4px 6px',
+    minHeight: 38,
+    padding: '6px 8px',
     fontFamily: "'DM Sans', sans-serif",
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: selected ? 600 : 500,
-    color: 'var(--text)',
+    color: selected ? 'var(--text)' : 'color-mix(in srgb, var(--muted) 35%, var(--text))',
     background: selected
       ? 'color-mix(in srgb, var(--accent) 12%, var(--surface))'
       : 'var(--surface)',
     border: selected ? '1px solid var(--accent)' : '1px solid var(--border)',
     borderRadius: 8,
     cursor: 'pointer',
-    transition: 'border-color 0.15s, background 0.15s',
+    transition: 'border-color 0.15s, background 0.15s, color 0.15s',
   }),
 
   zoneSelectorDot: ({ variant }) => {
@@ -505,18 +528,20 @@ export const styles = {
   },
 
   itemDragging: {
-    opacity: 0.4,
-    transform: 'scale(0.98)',
+    opacity: 0.45,
+    transform: 'scale(0.985)',
+    boxShadow: 'var(--shadow)',
   },
 
   itemDragOver: {
     borderColor: 'var(--accent)',
     boxShadow: '0 0 0 3px var(--ring)',
+    background: 'color-mix(in srgb, var(--accent) 6%, var(--row-zone-bg, var(--row-surface)))',
   },
 
   itemBought: {
-    background: 'color-mix(in srgb, var(--row-surface) 82%, var(--surface-2))',
-    borderColor: 'var(--row-border)',
+    background: 'color-mix(in srgb, var(--row-surface) 72%, var(--surface-2))',
+    borderColor: 'color-mix(in srgb, var(--border) 85%, var(--muted-2))',
   },
 
   dragHandle: {
@@ -691,12 +716,12 @@ export const styles = {
     right: 0,
     top: '100%',
     marginTop: 3,
-    minWidth: 148,
+    minWidth: 168,
     padding: '4px 0',
     background: 'var(--surface)',
     border: '1px solid var(--row-border)',
     borderRadius: 10,
-    boxShadow: 'var(--shadow)',
+    boxShadow: 'var(--shadow-strong)',
     zIndex: 50,
   },
 
@@ -731,15 +756,14 @@ export const styles = {
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 11,
     fontWeight: 600,
-    letterSpacing: '0.04em',
+    letterSpacing: '0.05em',
     textTransform: 'uppercase',
-    color: 'var(--muted-2)',
-    padding: '6px 14px 4px',
+    color: 'var(--muted)',
+    padding: '8px 14px 4px',
   },
 
   rowMenuItemChecked: {
     fontWeight: 600,
-    color: 'var(--text)',
   },
 
   rowMenuItemCheck: {

@@ -181,15 +181,11 @@ export default function GroceryApp() {
   };
 
   const addFromPreset = (presetName, mode) => {
-    console.log('debug addFromPreset called', { presetName, mode });
     const presetItems = presets[presetName] || [];
     const newItems = presetEntriesToFrontendItems(presetItems);
 
     if (items.length === 0) {
       setItems(ensureListWalkOrder(newItems));
-      console.log('debug loadedPresetName set from addFromPreset empty-list', {
-        presetName,
-      });
       setLoadedPresetName(presetName);
       setIsLoadPresetsOverlayOpen(false);
       return;
@@ -198,18 +194,12 @@ export default function GroceryApp() {
     const choice = (mode ?? '').trim().toLowerCase();
     if (choice === 'add') {
       setItems(ensureListWalkOrder([...items, ...newItems]));
-      console.log('debug loadedPresetName set from addFromPreset add', {
-        presetName,
-      });
       setLoadedPresetName(presetName);
       setIsLoadPresetsOverlayOpen(false);
       return;
     }
     if (choice === 'replace') {
       setItems(ensureListWalkOrder(newItems));
-      console.log('debug loadedPresetName set from addFromPreset replace', {
-        presetName,
-      });
       setLoadedPresetName(presetName);
       setIsLoadPresetsOverlayOpen(false);
       return;
@@ -318,7 +308,6 @@ export default function GroceryApp() {
     const shouldClear = window.confirm('Biztosan töröljük az egész listát?');
     if (!shouldClear) return;
     setItems([]);
-    console.log('debug loadedPresetName clear from clearAll');
     setLoadedPresetName('');
   };
 

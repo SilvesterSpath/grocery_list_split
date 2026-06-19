@@ -65,7 +65,9 @@ export function GroceryListPanel({
               key={id}
               type='button'
               role='radio'
+              className='kamra-zone-option'
               aria-checked={selected}
+              aria-label={`${label} zóna`}
               style={styles.zoneSelectorOption({ selected })}
               onClick={() => onSelectedStoreZoneChange(id)}
             >

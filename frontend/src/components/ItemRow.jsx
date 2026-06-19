@@ -91,6 +91,35 @@ export function ItemRow({
     }
   };
 
+  const getMenuFocusables = () => {
+    if (!menuWrapRef.current) return [];
+    return Array.from(
+      menuWrapRef.current.querySelectorAll(
+        'button[role="menuitem"], button[role="menuitemradio"]',
+      ),
+    );
+  };
+
+  const handleMenuKeyDown = (e) => {
+    const focusables = getMenuFocusables();
+    if (focusables.length === 0) return;
+
+    const idx = focusables.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusables[(idx + 1) % focusables.length]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusables[(idx - 1 + focusables.length) % focusables.length]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      focusables[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      focusables[focusables.length - 1]?.focus();
+    }
+  };
+
   const zoneTintStyle =
     showZoneTint && !item.bought ? styles.itemRowZoneTint(storeZone) : {};
 
@@ -114,7 +143,7 @@ export function ItemRow({
       <span
         style={styles.dragHandle}
         title='Húzd az átrendezéshez'
-        aria-hidden='true'
+        aria-label='Átrendezés húzással'
       >
         ⠿
       </span>
@@ -215,6 +244,7 @@ export function ItemRow({
             role='menu'
             aria-label='Tétel műveletek'
             style={styles.rowMenuDropdown}
+            onKeyDown={handleMenuKeyDown}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {!isEditing ? (
@@ -260,6 +290,7 @@ export function ItemRow({
               ref={isEditing ? firstMenuItemRef : null}
               type='button'
               role='menuitem'
+              className='kamra-menu-item-danger'
               style={{ ...styles.rowMenuItem, ...styles.rowMenuItemDanger }}
               onClick={handleDeletePick}
             >
