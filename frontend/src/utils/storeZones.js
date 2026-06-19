@@ -42,6 +42,43 @@ export function normalizePresetEntry(entry) {
   return null;
 }
 
+function zoneOrder(storeZone) {
+  const id = normalizeStoreZone(storeZone);
+  return STORE_ZONES.find((z) => z.id === id)?.order ?? 0;
+}
+
+/** Insert a new Megvenni item at the top of its storeZone block. */
+export function insertItemAtZoneTop(items, newItem) {
+  const zone = normalizeStoreZone(newItem.storeZone);
+  const targetOrder = zoneOrder(zone);
+
+  const firstInZone = items.findIndex(
+    (i) => i.needed && normalizeStoreZone(i.storeZone) === zone,
+  );
+  if (firstInZone !== -1) {
+    const next = [...items];
+    next.splice(firstInZone, 0, newItem);
+    return next;
+  }
+
+  let insertIdx = items.length;
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (!item.needed) {
+      insertIdx = i;
+      break;
+    }
+    if (zoneOrder(item.storeZone) > targetOrder) {
+      insertIdx = i;
+      break;
+    }
+  }
+
+  const next = [...items];
+  next.splice(insertIdx, 0, newItem);
+  return next;
+}
+
 export function presetEntriesToFrontendItems(entries) {
   if (!Array.isArray(entries)) return [];
 

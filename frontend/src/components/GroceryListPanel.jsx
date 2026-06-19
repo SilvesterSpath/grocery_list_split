@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { ItemRow } from './ItemRow.jsx';
 import { SavePresetModal } from './SavePresetModal.jsx';
 import { styles } from '../styles/groceryAppStyles.js';
+import { STORE_ZONES } from '../utils/storeZones.js';
 
 export function GroceryListPanel({
   items,
@@ -10,6 +11,8 @@ export function GroceryListPanel({
   newItemName,
   onNewItemNameChange,
   onAddItem,
+  selectedStoreZone,
+  onSelectedStoreZoneChange,
   showSavePreset,
   onOpenSavePreset,
   onOpenPresetOverlay,
@@ -49,6 +52,31 @@ export function GroceryListPanel({
 
   return (
     <>
+      <div
+        role='radiogroup'
+        aria-label='Boltban hely'
+        style={styles.zoneSelector}
+      >
+        {STORE_ZONES.map(({ id, label }) => {
+          const selected = selectedStoreZone === id;
+          return (
+            <button
+              key={id}
+              type='button'
+              role='radio'
+              aria-checked={selected}
+              style={styles.zoneSelectorOption({ selected })}
+              onClick={() => onSelectedStoreZoneChange(id)}
+            >
+              <span
+                style={styles.zoneSelectorDot({ variant: id })}
+                aria-hidden='true'
+              />
+              {label}
+            </button>
+          );
+        })}
+      </div>
       <div style={styles.addRow}>
         <input
           ref={inputRef}

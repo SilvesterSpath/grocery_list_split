@@ -240,6 +240,61 @@ export const styles = {
     marginBottom: 9,
   },
 
+  zoneSelector: {
+    display: 'flex',
+    gap: 6,
+    marginBottom: 8,
+    width: '100%',
+  },
+
+  zoneSelectorOption: ({ selected }) => ({
+    flex: 1,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    minWidth: 0,
+    padding: '4px 6px',
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 11,
+    fontWeight: selected ? 600 : 500,
+    color: 'var(--text)',
+    background: selected
+      ? 'color-mix(in srgb, var(--accent) 12%, var(--surface))'
+      : 'var(--surface)',
+    border: selected
+      ? '1px solid var(--accent)'
+      : '1px solid var(--border)',
+    borderRadius: 8,
+    cursor: 'pointer',
+    transition: 'border-color 0.15s, background 0.15s',
+  }),
+
+  zoneSelectorDot: ({ variant }) => {
+    const colors = {
+      front: {
+        background: 'color-mix(in srgb, var(--text) 8%, var(--surface))',
+        border: '1px solid var(--muted)',
+      },
+      middle: {
+        background: 'color-mix(in srgb, #eab308 35%, transparent)',
+        border: '1px solid color-mix(in srgb, #eab308 50%, var(--border))',
+      },
+      back: {
+        background: 'color-mix(in srgb, var(--success) 35%, transparent)',
+        border: '1px solid color-mix(in srgb, var(--success) 50%, var(--border))',
+      },
+    };
+    const style = colors[variant] ?? colors.front;
+    return {
+      width: 8,
+      height: 8,
+      borderRadius: '50%',
+      flexShrink: 0,
+      ...style,
+    };
+  },
+
   addInput: {
     flex: 1,
     fontFamily: "'DM Sans', sans-serif",

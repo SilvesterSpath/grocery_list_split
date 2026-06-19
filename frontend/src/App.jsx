@@ -19,7 +19,13 @@ import {
   translateKnownItemsInList,
   translateKnownPresets,
 } from './utils/groceryHelpers.js';
-import { normalizeItem } from './utils/storeZones.js';
+import {
+  DEFAULT_STORE_ZONE,
+  frontendItemsToPresetEntries,
+  insertItemAtZoneTop,
+  normalizeItem,
+  presetEntriesToFrontendItems,
+} from './utils/storeZones.js';
 
 function normalizeItemsInList(items) {
   if (!Array.isArray(items)) return [];
@@ -41,6 +47,7 @@ export default function GroceryApp() {
   const [newPresetName, setNewPresetName] = useState('');
   const [presetSaveErrorMessage, setPresetSaveErrorMessage] = useState('');
   const [loadedPresetName, setLoadedPresetName] = useState('');
+  const [selectedStoreZone, setSelectedStoreZone] = useState(DEFAULT_STORE_ZONE);
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [isHydrating, setIsHydrating] = useState(true);
@@ -108,7 +115,9 @@ export default function GroceryApp() {
   const addItem = () => {
     const name = newItemName.trim();
     if (!name) return;
-    setItems((prev) => [...prev, makeItem(name)]);
+    setItems((prev) =>
+      insertItemAtZoneTop(prev, makeItem(name, { storeZone: selectedStoreZone })),
+    );
     setNewItemName('');
   };
 
@@ -170,7 +179,7 @@ export default function GroceryApp() {
   const addFromPreset = (presetName, mode) => {
     console.log('debug addFromPreset called', { presetName, mode });
     const presetItems = presets[presetName] || [];
-    const newItems = presetItems.map(makeItem);
+    const newItems = presetEntriesToFrontendItems(presetItems);
 
     if (items.length === 0) {
       setItems(newItems);
@@ -222,13 +231,13 @@ export default function GroceryApp() {
   };
 
   const saveAsPreset = async () => {
-    const names = items.map((i) => i.name);
+    const presetEntries = frontendItemsToPresetEntries(items);
     const activePresetName = loadedPresetName.trim();
     const canOverwriteActive = activePresetName !== '';
 
     if (saveMode === 'overwrite' && canOverwriteActive) {
       try {
-        await overwritePreset(activePresetName, names);
+        await overwritePreset(activePresetName, presetEntries);
       } catch (err) {
         console.error('Failed to overwrite active preset on API', err);
         setPresetSaveErrorMessage('Nem sikerült felülírni a listát.');
@@ -238,7 +247,7 @@ export default function GroceryApp() {
       setPresets((prev) => {
         const next = { ...prev };
         delete next[activePresetName];
-        return { [activePresetName]: names, ...next };
+        return { [activePresetName]: presetEntries, ...next };
       });
       setPresetSaveErrorMessage('');
       setShowSavePreset(false);
@@ -254,7 +263,7 @@ export default function GroceryApp() {
     const exists = Object.prototype.hasOwnProperty.call(presets, name);
     if (exists) {
       try {
-        await overwritePreset(name, names);
+        await overwritePreset(name, presetEntries);
       } catch (err) {
         console.error('Failed to overwrite preset on API', err);
         setPresetSaveErrorMessage('Nem sikerült felülírni a listát.');
@@ -262,7 +271,7 @@ export default function GroceryApp() {
       }
     } else {
       try {
-        await createPreset(name, names);
+        await createPreset(name, presetEntries);
       } catch (err) {
         console.error('Failed to create preset on API', err);
         setPresetSaveErrorMessage('Nem sikerült menteni az új listát.');
@@ -273,7 +282,7 @@ export default function GroceryApp() {
     setPresets((prev) => {
       const next = { ...prev };
       delete next[name];
-      return { [name]: names, ...next };
+      return { [name]: presetEntries, ...next };
     });
     setLoadedPresetName(name);
     setPresetSaveErrorMessage('');
@@ -361,6 +370,8 @@ export default function GroceryApp() {
           newItemName={newItemName}
           onNewItemNameChange={setNewItemName}
           onAddItem={addItem}
+          selectedStoreZone={selectedStoreZone}
+          onSelectedStoreZoneChange={setSelectedStoreZone}
           showSavePreset={showSavePreset}
           onOpenSavePreset={handleOpenSavePreset}
           onOpenPresetOverlay={handleOpenLoadPresetsOverlay}

@@ -54,6 +54,7 @@ export async function putGlobal(items, activePresetName) {
 }
 
 export async function createPreset(name, itemsNames) {
+  // itemsNames: string[] (legacy) or { name, storeZone }[] (rich presets)
   return requestJSON(toUrl('/api/presets'), {
     method: 'POST',
     body: { name, itemsNames },
@@ -61,6 +62,7 @@ export async function createPreset(name, itemsNames) {
 }
 
 export async function overwritePreset(name, itemsNames) {
+  // itemsNames: string[] (legacy) or { name, storeZone }[] (rich presets)
   const encoded = encodeURIComponent(name);
   return requestJSON(toUrl(`/api/presets/${encoded}`), {
     method: 'PUT',

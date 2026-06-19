@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
+import { normalizePresetEntry } from '../utils/storeZones.js';
+
+function presetEntryDisplayName(entry) {
+  return normalizePresetEntry(entry)?.name ?? '';
+}
 
 export function PresetsPanel({
   presets,
@@ -58,13 +63,13 @@ export function PresetsPanel({
           </div>
         </div>
       ) : (
-        Object.entries(presets).map(([name, itemNames]) => (
+        Object.entries(presets).map(([name, presetEntries]) => (
           <div key={name} style={styles.presetCard}>
             <div style={styles.presetCardTop}>
               <div>
                 <div style={styles.presetCardName}>{name}</div>
                 <div style={styles.presetCardCount}>
-                  {itemNames.length} tétel
+                  {presetEntries.length} tétel
                 </div>
               </div>
               <div style={styles.presetCardActions}>
@@ -87,14 +92,19 @@ export function PresetsPanel({
               </div>
             </div>
             <div style={styles.presetTags}>
-              {(expandedPresets[name] ? itemNames : itemNames.slice(0, 8)).map(
-                (n, i) => (
+              {(expandedPresets[name]
+                ? presetEntries
+                : presetEntries.slice(0, 8)
+              ).map((entry, i) => {
+                const label = presetEntryDisplayName(entry);
+                if (!label) return null;
+                return (
                   <span key={i} style={styles.tag}>
-                    {n}
+                    {label}
                   </span>
-                ),
-              )}
-              {itemNames.length > 8 && (
+                );
+              })}
+              {presetEntries.length > 8 && (
                 <button
                   type='button'
                   style={{
@@ -106,7 +116,7 @@ export function PresetsPanel({
                 >
                   {expandedPresets[name]
                     ? 'Kevesebb'
-                    : `+${itemNames.length - 8} további`}
+                    : `+${presetEntries.length - 8} további`}
                 </button>
               )}
             </div>
