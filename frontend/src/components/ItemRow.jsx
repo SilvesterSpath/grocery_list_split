@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { styles } from '../styles/groceryAppStyles.js';
-import { normalizeStoreZone } from '../utils/storeZones.js';
+import { normalizeStoreZone, STORE_ZONES } from '../utils/storeZones.js';
 
 export function ItemRow({
   item,
@@ -14,6 +14,7 @@ export function ItemRow({
   onToggleNeeded,
   onToggleBought,
   onDelete,
+  onChangeStoreZone,
   isDragging,
   isDragOver,
   onDragStart,
@@ -82,6 +83,14 @@ export function ItemRow({
   };
 
   const storeZone = normalizeStoreZone(item.storeZone);
+
+  const handleZonePick = (zoneId) => {
+    setMenuOpen(false);
+    if (normalizeStoreZone(zoneId) !== storeZone) {
+      onChangeStoreZone(item.id, zoneId);
+    }
+  };
+
   const zoneTintStyle =
     showZoneTint && !item.bought ? styles.itemRowZoneTint(storeZone) : {};
 
@@ -219,6 +228,34 @@ export function ItemRow({
                 Szerkesztés
               </button>
             ) : null}
+            <div
+              role='group'
+              aria-label='Boltban hely'
+              style={styles.rowMenuZoneGroup}
+            >
+              <div style={styles.rowMenuSectionLabel}>Boltban hely</div>
+              {STORE_ZONES.map(({ id, label }) => {
+                const checked = storeZone === id;
+                return (
+                  <button
+                    key={id}
+                    type='button'
+                    role='menuitemradio'
+                    aria-checked={checked}
+                    style={{
+                      ...styles.rowMenuItem,
+                      ...(checked ? styles.rowMenuItemChecked : {}),
+                    }}
+                    onClick={() => handleZonePick(id)}
+                  >
+                    <span style={styles.rowMenuItemCheck} aria-hidden='true'>
+                      {checked ? '✓' : ''}
+                    </span>
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
             <button
               ref={isEditing ? firstMenuItemRef : null}
               type='button'

@@ -21,15 +21,17 @@ import {
 } from './utils/groceryHelpers.js';
 import {
   DEFAULT_STORE_ZONE,
+  ensureListWalkOrder,
   frontendItemsToPresetEntries,
   insertItemAtZoneTop,
+  moveNeededItemToZoneTop,
   normalizeItem,
   presetEntriesToFrontendItems,
 } from './utils/storeZones.js';
 
 function normalizeItemsInList(items) {
   if (!Array.isArray(items)) return [];
-  return items.map((item) => normalizeItem(item));
+  return ensureListWalkOrder(items.map((item) => normalizeItem(item)));
 }
 
 export default function GroceryApp() {
@@ -47,7 +49,8 @@ export default function GroceryApp() {
   const [newPresetName, setNewPresetName] = useState('');
   const [presetSaveErrorMessage, setPresetSaveErrorMessage] = useState('');
   const [loadedPresetName, setLoadedPresetName] = useState('');
-  const [selectedStoreZone, setSelectedStoreZone] = useState(DEFAULT_STORE_ZONE);
+  const [selectedStoreZone, setSelectedStoreZone] =
+    useState(DEFAULT_STORE_ZONE);
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [isHydrating, setIsHydrating] = useState(true);
@@ -116,7 +119,12 @@ export default function GroceryApp() {
     const name = newItemName.trim();
     if (!name) return;
     setItems((prev) =>
-      insertItemAtZoneTop(prev, makeItem(name, { storeZone: selectedStoreZone })),
+      ensureListWalkOrder(
+        insertItemAtZoneTop(
+          prev,
+          makeItem(name, { storeZone: selectedStoreZone }),
+        ),
+      ),
     );
     setNewItemName('');
   };
@@ -125,38 +133,33 @@ export default function GroceryApp() {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
+  const changeStoreZone = (id, zone) => {
+    setItems((prev) =>
+      ensureListWalkOrder(moveNeededItemToZoneTop(prev, id, zone)),
+    );
+  };
+
   const toggleNeeded = (id) =>
     setItems((prev) =>
-      prev.map((i) => {
-        if (i.id !== id) return i;
-        const nextNeeded = !i.needed;
-        // Items moved to "Már megvan" cannot stay in basket.
-        return { ...i, needed: nextNeeded, bought: nextNeeded ? i.bought : false };
-      }),
+      ensureListWalkOrder(
+        prev.map((i) => {
+          if (i.id !== id) return i;
+          const nextNeeded = !i.needed;
+          return {
+            ...i,
+            needed: nextNeeded,
+            bought: nextNeeded ? i.bought : false,
+          };
+        }),
+      ),
     );
 
   const toggleBought = (id) =>
-    setItems((prev) => {
-      const idx = prev.findIndex((i) => i.id === id);
-      if (idx === -1) return prev;
-
-      const current = prev[idx];
-      const nextItem = { ...current, bought: !current.bought };
-
-      const without = [...prev.slice(0, idx), ...prev.slice(idx + 1)];
-
-      // When an item is checked (put in basket), move it to the bottom.
-      if (nextItem.bought) return [...without, nextItem];
-
-      // When unchecked, move it back above bought items.
-      const firstBoughtIdx = without.findIndex((i) => i.bought);
-      if (firstBoughtIdx === -1) return [...without, nextItem];
-      return [
-        ...without.slice(0, firstBoughtIdx),
-        nextItem,
-        ...without.slice(firstBoughtIdx),
-      ];
-    });
+    setItems((prev) =>
+      ensureListWalkOrder(
+        prev.map((i) => (i.id === id ? { ...i, bought: !i.bought } : i)),
+      ),
+    );
 
   const startEdit = (item) => {
     setEditingId(item.id);
@@ -182,7 +185,7 @@ export default function GroceryApp() {
     const newItems = presetEntriesToFrontendItems(presetItems);
 
     if (items.length === 0) {
-      setItems(newItems);
+      setItems(ensureListWalkOrder(newItems));
       console.log('debug loadedPresetName set from addFromPreset empty-list', {
         presetName,
       });
@@ -193,7 +196,7 @@ export default function GroceryApp() {
 
     const choice = (mode ?? '').trim().toLowerCase();
     if (choice === 'add') {
-      setItems([...items, ...newItems]);
+      setItems(ensureListWalkOrder([...items, ...newItems]));
       console.log('debug loadedPresetName set from addFromPreset add', {
         presetName,
       });
@@ -202,7 +205,7 @@ export default function GroceryApp() {
       return;
     }
     if (choice === 'replace') {
-      setItems(newItems);
+      setItems(ensureListWalkOrder(newItems));
       console.log('debug loadedPresetName set from addFromPreset replace', {
         presetName,
       });
@@ -336,7 +339,7 @@ export default function GroceryApp() {
       const toIdx = next.findIndex((i) => i.id === targetId);
       const [moved] = next.splice(fromIdx, 1);
       next.splice(toIdx, 0, moved);
-      return next;
+      return ensureListWalkOrder(next);
     });
     setDragState(null);
     setDragOver(null);
@@ -398,6 +401,7 @@ export default function GroceryApp() {
           onToggleNeeded={toggleNeeded}
           onToggleBought={toggleBought}
           onDeleteItem={deleteItem}
+          onChangeStoreZone={changeStoreZone}
           dragState={dragState}
           dragOver={dragOver}
           onDragStart={handleDragStart}

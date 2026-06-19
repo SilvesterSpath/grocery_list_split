@@ -36,6 +36,7 @@ export function GroceryListPanel({
   onToggleNeeded,
   onToggleBought,
   onDeleteItem,
+  onChangeStoreZone,
   dragState,
   dragOver,
   onDragStart,
@@ -176,6 +177,7 @@ export function GroceryListPanel({
                   onToggleNeeded={onToggleNeeded}
                   onToggleBought={onToggleBought}
                   onDelete={onDeleteItem}
+                  onChangeStoreZone={onChangeStoreZone}
                   isDragging={dragState === item.id}
                   isDragOver={dragOver === item.id}
                   onDragStart={onDragStart}
@@ -211,6 +213,7 @@ export function GroceryListPanel({
                   onToggleNeeded={onToggleNeeded}
                   onToggleBought={onToggleBought}
                   onDelete={onDeleteItem}
+                  onChangeStoreZone={onChangeStoreZone}
                   isDragging={dragState === item.id}
                   isDragOver={dragOver === item.id}
                   onDragStart={onDragStart}

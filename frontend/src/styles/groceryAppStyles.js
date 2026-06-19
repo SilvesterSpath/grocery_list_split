@@ -80,6 +80,10 @@
     background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
   }
 
+  button[role='menuitemradio']:hover {
+    background: color-mix(in srgb, var(--surface-2) 72%, var(--surface));
+  }
+
   .kamra-btn-save:hover,
   .kamra-btn-load:hover {
     background: color-mix(in srgb, var(--surface-2) 45%, var(--surface));
@@ -271,9 +275,7 @@ export const styles = {
     background: selected
       ? 'color-mix(in srgb, var(--accent) 12%, var(--surface))'
       : 'var(--surface)',
-    border: selected
-      ? '1px solid var(--accent)'
-      : '1px solid var(--border)',
+    border: selected ? '1px solid var(--accent)' : '1px solid var(--border)',
     borderRadius: 8,
     cursor: 'pointer',
     transition: 'border-color 0.15s, background 0.15s',
@@ -291,7 +293,8 @@ export const styles = {
       },
       back: {
         background: 'color-mix(in srgb, var(--success) 35%, transparent)',
-        border: '1px solid color-mix(in srgb, var(--success) 50%, var(--border))',
+        border:
+          '1px solid color-mix(in srgb, var(--success) 50%, var(--border))',
       },
     };
     const style = colors[variant] ?? colors.front;
@@ -394,7 +397,8 @@ export const styles = {
     color: 'var(--danger)',
     background: 'transparent',
     border: 'none',
-    borderLeft: '1px solid color-mix(in srgb, var(--border) 78%, var(--surface-2))',
+    borderLeft:
+      '1px solid color-mix(in srgb, var(--border) 78%, var(--surface-2))',
     cursor: 'pointer',
     minWidth: 36,
     height: 36,
@@ -715,6 +719,36 @@ export const styles = {
 
   rowMenuItemDanger: {
     color: 'var(--danger)',
+  },
+
+  rowMenuZoneGroup: {
+    borderTop: '1px solid var(--row-border)',
+    marginTop: 4,
+    paddingTop: 4,
+  },
+
+  rowMenuSectionLabel: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
+    color: 'var(--muted-2)',
+    padding: '6px 14px 4px',
+  },
+
+  rowMenuItemChecked: {
+    fontWeight: 600,
+    color: 'var(--text)',
+  },
+
+  rowMenuItemCheck: {
+    display: 'inline-block',
+    width: 16,
+    marginRight: 4,
+    textAlign: 'center',
+    color: 'var(--accent)',
+    fontWeight: 700,
   },
 
   empty: {

@@ -47,13 +47,19 @@ function zoneOrder(storeZone) {
   return STORE_ZONES.find((z) => z.id === id)?.order ?? 0;
 }
 
-/** Insert a new Megvenni item at the top of its storeZone block. */
+/** Insert a Megvenni item at the top of its zone block within its segment (active or kosár). */
 export function insertItemAtZoneTop(items, newItem) {
+  if (!newItem.needed) {
+    const next = [...items, newItem];
+    return next;
+  }
+
   const zone = normalizeStoreZone(newItem.storeZone);
   const targetOrder = zoneOrder(zone);
+  const inSegment = (i) => i.needed && !!i.bought === !!newItem.bought;
 
   const firstInZone = items.findIndex(
-    (i) => i.needed && normalizeStoreZone(i.storeZone) === zone,
+    (i) => inSegment(i) && normalizeStoreZone(i.storeZone) === zone,
   );
   if (firstInZone !== -1) {
     const next = [...items];
@@ -64,7 +70,7 @@ export function insertItemAtZoneTop(items, newItem) {
   let insertIdx = items.length;
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    if (!item.needed) {
+    if (!inSegment(item)) {
       insertIdx = i;
       break;
     }
@@ -79,13 +85,68 @@ export function insertItemAtZoneTop(items, newItem) {
   return next;
 }
 
-/** Move a needed item to the top of its target zone block (for Phase 4 zone changes). */
+/** Megvenni items in front → middle → back blocks; within-zone order unchanged. */
+export function sortNeededByZoneBlocks(neededItems) {
+  const front = [];
+  const middle = [];
+  const back = [];
+  for (const item of neededItems) {
+    const zone = normalizeStoreZone(item.storeZone);
+    if (zone === 'front') front.push(item);
+    else if (zone === 'middle') middle.push(item);
+    else back.push(item);
+  }
+  return [...front, ...middle, ...back];
+}
+
+function partitionListSegments(items) {
+  const activeNeeded = [];
+  const basketNeeded = [];
+  const have = [];
+  for (const item of items) {
+    if (!item.needed) have.push(item);
+    else if (item.bought) basketNeeded.push(item);
+    else activeNeeded.push(item);
+  }
+  return { activeNeeded, basketNeeded, have };
+}
+
+/**
+ * Canonical walk order in items[]:
+ * 1. Megvenni active (needed, !bought) — front → middle → back
+ * 2. Megvenni kosár (needed, bought) — front → middle → back
+ * 3. Már megvan (!needed)
+ */
+export function ensureListWalkOrder(items) {
+  if (!Array.isArray(items) || items.length === 0) return items;
+
+  const { activeNeeded, basketNeeded, have } = partitionListSegments(items);
+  const next = [
+    ...sortNeededByZoneBlocks(activeNeeded),
+    ...sortNeededByZoneBlocks(basketNeeded),
+    ...have,
+  ];
+
+  if (next.length !== items.length) return items;
+  const unchanged = next.every((item, i) => item.id === items[i]?.id);
+  return unchanged ? items : next;
+}
+
+/** @deprecated alias — use ensureListWalkOrder */
+export function ensureNeededZoneBlockOrder(items) {
+  return ensureListWalkOrder(items);
+}
+
+/** Move a needed item to the top of its target zone block; Már megvan updates zone in place. */
 export function moveNeededItemToZoneTop(items, itemId, targetZone) {
   const zone = normalizeStoreZone(targetZone);
   const idx = items.findIndex((i) => i.id === itemId);
   if (idx === -1) return items;
 
-  const item = { ...items[idx], storeZone: zone };
+  const current = items[idx];
+  if (normalizeStoreZone(current.storeZone) === zone) return items;
+
+  const item = { ...current, storeZone: zone };
   if (!item.needed) {
     const next = [...items];
     next[idx] = item;
@@ -115,7 +176,10 @@ export function frontendItemsToPresetEntries(items) {
   if (!Array.isArray(items)) return [];
 
   return items
-    .filter((item) => item && typeof item === 'object' && typeof item.name === 'string')
+    .filter(
+      (item) =>
+        item && typeof item === 'object' && typeof item.name === 'string',
+    )
     .map((item) => ({
       name: item.name.trim(),
       storeZone: normalizeStoreZone(item.storeZone),
