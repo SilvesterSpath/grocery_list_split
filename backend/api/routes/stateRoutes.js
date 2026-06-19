@@ -1,7 +1,7 @@
 import express from 'express';
 import GlobalState from '../models/GlobalState.js';
 import Preset from '../models/Preset.js';
-import { isValidStoreZone, normalizeStoreZone } from '../storeZones.js';
+import { DEFAULT_STORE_ZONE, isValidStoreZone, normalizeStoreZone } from '../storeZones.js';
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ function itemsFromLegacyNames(itemsNames) {
       name,
       needed: true,
       bought: false,
-      storeZone: 'front',
+      storeZone: DEFAULT_STORE_ZONE,
     }));
 }
 

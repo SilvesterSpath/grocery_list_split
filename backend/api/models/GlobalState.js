@@ -8,8 +8,8 @@ const ListItemSchema = new mongoose.Schema(
     bought: { type: Boolean, required: true },
     storeZone: {
       type: String,
-      enum: ['front', 'middle', 'back', 'na'],
-      default: 'front',
+      enum: ['na', 'front', 'middle', 'back'],
+      default: 'na',
     },
   },
   { _id: false },

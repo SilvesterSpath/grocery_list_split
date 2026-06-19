@@ -5,7 +5,7 @@ export const STORE_ZONES = [
   { id: 'na', label: 'N/A', order: 3 },
 ];
 
-export const DEFAULT_STORE_ZONE = 'front';
+export const DEFAULT_STORE_ZONE = 'na';
 
 const VALID_STORE_ZONES = new Set(STORE_ZONES.map((z) => z.id));
 
