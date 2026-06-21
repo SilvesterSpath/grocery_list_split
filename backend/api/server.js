@@ -36,7 +36,11 @@ app.use(
 app.use(express.json({ limit: '200kb' }));
 
 app.get('/health', (req, res) => {
-  res.json({ ok: true });
+  res.json({
+    ok: true,
+    apiVersion: 2,
+    presetFormat: 'string-or-storeZone-object',
+  });
 });
 
 app.use('/api', stateRoutes);
