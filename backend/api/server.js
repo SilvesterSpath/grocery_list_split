@@ -18,6 +18,20 @@ const allowedOrigins = (process.env.CORS_ORIGIN ?? '')
   .map((s) => s.trim())
   .filter(Boolean);
 
+/** Vercel production + preview URLs (PR deploys use *.vercel.app). */
+function isAllowedBrowserOrigin(origin) {
+  if (allowedOrigins.includes(origin)) return true;
+  try {
+    const { protocol, hostname } = new URL(origin);
+    if (protocol !== 'https:' && protocol !== 'http:') return false;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return true;
+    if (hostname.endsWith('.vercel.app')) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -27,7 +41,7 @@ app.use(
       // If no CORS_ORIGIN is configured, keep current permissive behavior.
       if (allowedOrigins.length === 0) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) return callback(null, origin);
+      if (isAllowedBrowserOrigin(origin)) return callback(null, origin);
       return callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

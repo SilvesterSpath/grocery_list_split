@@ -40,7 +40,7 @@ Create environment variables on Render (or locally) for:
 
 - `MONGO_URI` (MongoDB connection string)
 - `PORT` (optional, defaults to `5000`)
-- `CORS_ORIGIN` (optional, defaults to `*`)
+- `CORS_ORIGIN` (optional comma-separated production origins; when set, `localhost` and `*.vercel.app` preview URLs are also allowed)
 
 See: `backend/.env.example`
 
