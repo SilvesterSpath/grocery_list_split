@@ -115,8 +115,11 @@ export function ItemRow({
     }
   };
 
-  const zoneTintStyle =
-    showZoneTint && !item.bought ? styles.itemRowZoneTint(storeZone) : {};
+  const showRowZoneTint =
+    showZoneTint && (!item.bought || storeZone === 'na');
+  const zoneTintStyle = showRowZoneTint
+    ? styles.itemRowZoneTint(storeZone)
+    : {};
 
   const showNaItemNameTone =
     showZoneTint && storeZone === 'na' && item.needed && !item.bought;

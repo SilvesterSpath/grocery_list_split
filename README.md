@@ -14,8 +14,8 @@ Each item has a `storeZone` for layout while shopping:
 | Zone                 | `storeZone`    | Label (HU)    | Row tint                        |
 | -------------------- | -------------- | ------------- | ------------------------------- |
 | Front                | `front`        | Elöl          | Light neutral                   |
-| Middle (first stop)  | `middle_front` | Középen elöl  | Light blue                      |
-| Middle (second stop) | `middle_back`  | Középen hátul | Light yellow                    |
+| Middle (first stop)  | `middle_front` | Közép elöl    | Light blue                      |
+| Middle (second stop) | `middle_back`  | Közép hátul   | Light yellow                    |
 | Back                 | `back`         | Hátul         | Light green                     |
 | Unassigned           | `na`           | N/A           | Light neutral row; light yellow item text |
 
@@ -23,7 +23,7 @@ Each item has a `storeZone` for layout while shopping:
 
 - **Default zone:** `na` for new items and for legacy data without `storeZone`
 - **Add row:** zone selector (session-only; pre-selects last choice)
-- **Row ⋯ menu:** Elöl / Középen elöl / Középen hátul / Hátul / N/A + Törlés (rename via double-click)
+- **Row ⋯ menu:** Elöl / Közép elöl / Közép hátul / Hátul / N/A + Törlés (rename via double-click)
 - **List order:** active Megvenni (zone-sorted) → kosár (needed + bought, zone-sorted) → Már megvan
 - **Drag-and-drop:** reorder within the same zone and same segment only
 - **Presets (💾 Mentés):** save `{ name, storeZone }[]`; old string presets still load as `na`

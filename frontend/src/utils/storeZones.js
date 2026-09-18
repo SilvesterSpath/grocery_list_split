@@ -1,7 +1,7 @@
 export const STORE_ZONES = [
   { id: 'front', label: 'Elöl', order: 0 },
-  { id: 'middle_front', label: 'Középen elöl', order: 1 },
-  { id: 'middle_back', label: 'Középen hátul', order: 2 },
+  { id: 'middle_front', label: 'Közép elöl', order: 1 },
+  { id: 'middle_back', label: 'Közép hátul', order: 2 },
   { id: 'back', label: 'Hátul', order: 3 },
   { id: 'na', label: 'N/A', order: 4 },
 ];

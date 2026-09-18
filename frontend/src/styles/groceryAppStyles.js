@@ -28,6 +28,7 @@
     --zone-middle-back-bg: color-mix(in srgb, #eab308 9%, var(--row-surface));
     --zone-back-bg: color-mix(in srgb, var(--success) 10%, var(--row-surface));
     --zone-na-bg: color-mix(in srgb, #ffffff 28%, var(--row-surface));
+    --zone-na-row-bg: color-mix(in srgb, #ffffff 36%, var(--row-surface));
     --zone-na-fg: color-mix(in srgb, #fde68a 58%, #ca8a04);
   }
 
@@ -59,6 +60,7 @@
     --zone-middle-back-bg: color-mix(in srgb, #eab308 14%, var(--row-surface));
     --zone-back-bg: color-mix(in srgb, var(--success) 14%, var(--row-surface));
     --zone-na-bg: color-mix(in srgb, #ffffff 12%, var(--row-surface));
+    --zone-na-row-bg: color-mix(in srgb, #ffffff 18%, var(--row-surface));
     --zone-na-fg: color-mix(in srgb, #fef9c3 62%, #fde047);
   }
 
@@ -545,7 +547,7 @@ export const styles = {
       middle_front: 'var(--zone-middle-front-bg)',
       middle_back: 'var(--zone-middle-back-bg)',
       back: 'var(--zone-back-bg)',
-      na: 'var(--zone-na-bg)',
+      na: 'var(--zone-na-row-bg)',
     };
     const background = zoneBg[storeZone] ?? zoneBg.front;
     return {
