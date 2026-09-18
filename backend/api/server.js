@@ -38,7 +38,7 @@ app.use(express.json({ limit: '200kb' }));
 app.get('/health', (req, res) => {
   res.json({
     ok: true,
-    apiVersion: 2,
+    apiVersion: 3,
     presetFormat: 'string-or-storeZone-object',
   });
 });

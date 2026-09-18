@@ -24,8 +24,11 @@
     --row-surface: color-mix(in srgb, var(--surface) 94%, var(--bg));
     --toggle-on: color-mix(in srgb, var(--muted) 46%, var(--surface-2));
     --zone-front-bg: color-mix(in srgb, var(--row-surface) 98%, var(--text));
-    --zone-middle-bg: color-mix(in srgb, #eab308 9%, var(--row-surface));
+    --zone-middle-front-bg: color-mix(in srgb, #38bdf8 10%, var(--row-surface));
+    --zone-middle-back-bg: color-mix(in srgb, #eab308 9%, var(--row-surface));
     --zone-back-bg: color-mix(in srgb, var(--success) 10%, var(--row-surface));
+    --zone-na-bg: color-mix(in srgb, #ffffff 28%, var(--row-surface));
+    --zone-na-fg: color-mix(in srgb, #fde68a 58%, #ca8a04);
   }
 
   :root[data-theme="dark"]{
@@ -52,8 +55,11 @@
     --row-surface: color-mix(in srgb, var(--surface) 96%, var(--bg));
     --toggle-on: color-mix(in srgb, var(--muted-2) 54%, var(--surface-2));
     --zone-front-bg: color-mix(in srgb, var(--row-surface) 90%, var(--text));
-    --zone-middle-bg: color-mix(in srgb, #eab308 14%, var(--row-surface));
+    --zone-middle-front-bg: color-mix(in srgb, #38bdf8 14%, var(--row-surface));
+    --zone-middle-back-bg: color-mix(in srgb, #eab308 14%, var(--row-surface));
     --zone-back-bg: color-mix(in srgb, var(--success) 14%, var(--row-surface));
+    --zone-na-bg: color-mix(in srgb, #ffffff 12%, var(--row-surface));
+    --zone-na-fg: color-mix(in srgb, #fef9c3 62%, #fde047);
   }
 
   .kamra-sr-only {
@@ -277,33 +283,47 @@ export const styles = {
 
   zoneSelector: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: 5,
+    flexWrap: 'nowrap',
+    gap: 4,
     marginBottom: 8,
     width: '100%',
   },
 
-  zoneSelectorOption: ({ selected }) => ({
-    flex: '1 1 22%',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    minWidth: 0,
-    minHeight: 36,
-    padding: '5px 6px',
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: 11,
-    fontWeight: selected ? 600 : 500,
-    color: selected ? 'var(--text)' : 'color-mix(in srgb, var(--muted) 35%, var(--text))',
-    background: selected
+  zoneSelectorOption: ({ selected, variant }) => {
+    const isNa = variant === 'na';
+    const naBg = 'var(--zone-na-bg)';
+    const defaultBg = selected
       ? 'color-mix(in srgb, var(--accent) 12%, var(--surface))'
-      : 'var(--surface)',
-    border: selected ? '1px solid var(--accent)' : '1px solid var(--border)',
-    borderRadius: 8,
-    cursor: 'pointer',
-    transition: 'border-color 0.15s, background 0.15s, color 0.15s',
-  }),
+      : 'var(--surface)';
+    const naSelectedBg =
+      'color-mix(in srgb, var(--accent) 8%, var(--zone-na-bg))';
+
+    return {
+      flex: isNa ? '1 1 0' : '2 2 0',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: isNa ? 2 : 3,
+      minWidth: 0,
+      minHeight: 36,
+      padding: isNa ? '5px 2px' : '5px 3px',
+      overflow: 'hidden',
+      fontFamily: "'DM Sans', sans-serif",
+      fontSize: 10,
+      lineHeight: 1.15,
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      fontWeight: selected ? 600 : 500,
+      color: selected
+        ? 'var(--text)'
+        : 'color-mix(in srgb, var(--muted) 35%, var(--text))',
+      background: isNa ? (selected ? naSelectedBg : naBg) : defaultBg,
+      border: selected ? '1px solid var(--accent)' : '1px solid var(--border)',
+      borderRadius: 8,
+      cursor: 'pointer',
+      transition: 'border-color 0.15s, background 0.15s, color 0.15s',
+    };
+  },
 
   zoneSelectorDot: ({ variant }) => {
     const colors = {
@@ -311,7 +331,11 @@ export const styles = {
         background: 'color-mix(in srgb, var(--text) 8%, var(--surface))',
         border: '1px solid var(--muted)',
       },
-      middle: {
+      middle_front: {
+        background: 'color-mix(in srgb, #38bdf8 35%, transparent)',
+        border: '1px solid color-mix(in srgb, #38bdf8 50%, var(--border))',
+      },
+      middle_back: {
         background: 'color-mix(in srgb, #eab308 35%, transparent)',
         border: '1px solid color-mix(in srgb, #eab308 50%, var(--border))',
       },
@@ -321,7 +345,7 @@ export const styles = {
           '1px solid color-mix(in srgb, var(--success) 50%, var(--border))',
       },
       na: {
-        background: 'transparent',
+        background: 'color-mix(in srgb, #ffffff 45%, var(--surface))',
         border: '1px dashed var(--muted-2)',
       },
     };
@@ -516,11 +540,12 @@ export const styles = {
   },
 
   itemRowZoneTint: (storeZone) => {
-    if (storeZone === 'na') return {};
     const zoneBg = {
       front: 'var(--zone-front-bg)',
-      middle: 'var(--zone-middle-bg)',
+      middle_front: 'var(--zone-middle-front-bg)',
+      middle_back: 'var(--zone-middle-back-bg)',
       back: 'var(--zone-back-bg)',
+      na: 'var(--zone-na-bg)',
     };
     const background = zoneBg[storeZone] ?? zoneBg.front;
     return {
@@ -542,7 +567,8 @@ export const styles = {
   itemDragOver: {
     borderColor: 'var(--accent)',
     boxShadow: '0 0 0 3px var(--ring)',
-    background: 'color-mix(in srgb, var(--accent) 6%, var(--row-zone-bg, var(--row-surface)))',
+    background:
+      'color-mix(in srgb, var(--accent) 6%, var(--row-zone-bg, var(--row-surface)))',
   },
 
   itemBought: {
@@ -618,6 +644,10 @@ export const styles = {
 
   itemNameHave: {
     color: 'var(--muted)',
+  },
+
+  itemNameZoneNa: {
+    color: 'var(--zone-na-fg)',
   },
 
   editInput: {
@@ -770,6 +800,10 @@ export const styles = {
 
   rowMenuItemChecked: {
     fontWeight: 600,
+  },
+
+  rowMenuItemNaChecked: {
+    background: 'var(--zone-na-bg)',
   },
 
   rowMenuItemCheck: {

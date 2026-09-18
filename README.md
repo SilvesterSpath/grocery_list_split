@@ -3,6 +3,7 @@
 Hungarian grocery list app (**Kamra**) with an active shopping list, saved presets, and **store zones** so the Megvenni list follows walk order in the store.
 
 This repo is split into:
+
 - `frontend/` (Vite + React) deployed to **Vercel**
 - `backend/` (Node + Express + MongoDB) deployed to **Render**
 
@@ -10,17 +11,19 @@ This repo is split into:
 
 Each item has a `storeZone` for layout while shopping:
 
-| Zone | `storeZone` | Label (HU) | Row tint |
-| ---- | ----------- | ---------- | -------- |
-| Front | `front` | Elöl | Light neutral |
-| Middle | `middle` | Középen | Light yellow |
-| Back | `back` | Hátul | Light green |
-| Unassigned | `na` | N/A | None (default row) |
+| Zone                 | `storeZone`    | Label (HU)    | Row tint                        |
+| -------------------- | -------------- | ------------- | ------------------------------- |
+| Front                | `front`        | Elöl          | Light neutral                   |
+| Middle (first stop)  | `middle_front` | Középen elöl  | Light blue                      |
+| Middle (second stop) | `middle_back`  | Középen hátul | Light yellow                    |
+| Back                 | `back`         | Hátul         | Light green                     |
+| Unassigned           | `na`           | N/A           | Light neutral row; light yellow item text |
 
 **Behavior:**
+
 - **Default zone:** `na` for new items and for legacy data without `storeZone`
 - **Add row:** zone selector (session-only; pre-selects last choice)
-- **Row ⋯ menu:** Elöl / Középen / Hátul / N/A + Törlés (rename via double-click)
+- **Row ⋯ menu:** Elöl / Középen elöl / Középen hátul / Hátul / N/A + Törlés (rename via double-click)
 - **List order:** active Megvenni (zone-sorted) → kosár (needed + bought, zone-sorted) → Már megvan
 - **Drag-and-drop:** reorder within the same zone and same segment only
 - **Presets (💾 Mentés):** save `{ name, storeZone }[]`; old string presets still load as `na`
@@ -34,6 +37,7 @@ Detailed design: [docs/kamra-store-zones-plan.md](docs/kamra-store-zones-plan.md
 ### Backend (`backend/`)
 
 Create environment variables on Render (or locally) for:
+
 - `MONGO_URI` (MongoDB connection string)
 - `PORT` (optional, defaults to `5000`)
 - `CORS_ORIGIN` (optional, defaults to `*`)
@@ -43,6 +47,7 @@ See: `backend/.env.example`
 ### Frontend (`frontend/`)
 
 Set:
+
 - `VITE_API_BASE_URL` to your Render backend origin
 
 See: `frontend/.env.example`
@@ -55,6 +60,7 @@ See: `frontend/.env.example`
 3. Set `MONGO_URI` and `CORS_ORIGIN` environment variables.
 
 Backend health check:
+
 - `GET /health`
 
 ## Frontend deploy (Vercel)
@@ -92,7 +98,7 @@ Each item in `items[]`:
 ```
 
 - `items[]` **order = screen order** (autosaved as-is)
-- `storeZone`: `na` | `front` | `middle` | `back` (default `na`)
+- `storeZone`: `na` | `front` | `middle_front` | `middle_back` | `back` (default `na`; legacy `middle` → `middle_front`)
 - Legacy `itemsNames: string[]` on old documents is still read; entries map to `storeZone: "na"`
 
 ### Presets (`Preset.itemsNames`)
@@ -111,9 +117,9 @@ Presets do **not** store `id`, `needed`, or `bought`.
 
 ## Feature docs & workflow
 
-| Path | Purpose |
-| ---- | ------- |
-| [docs/kamra-store-zones-plan.md](docs/kamra-store-zones-plan.md) | Architecture, invariants, changelog |
-| [docs/kamra-store-zones-phases.md](docs/kamra-store-zones-phases.md) | Implementation phases (1–8) |
-| [context/current-feature.md](context/current-feature.md) | Current feature status / handoff |
-| [context/phase-close-out.md](context/phase-close-out.md) | ~2 min checklist when a phase finishes |
+| Path                                                                 | Purpose                                |
+| -------------------------------------------------------------------- | -------------------------------------- |
+| [docs/kamra-store-zones-plan.md](docs/kamra-store-zones-plan.md)     | Architecture, invariants, changelog    |
+| [docs/kamra-store-zones-phases.md](docs/kamra-store-zones-phases.md) | Implementation phases (1–8)            |
+| [context/current-feature.md](context/current-feature.md)             | Current feature status / handoff       |
+| [context/phase-close-out.md](context/phase-close-out.md)             | ~2 min checklist when a phase finishes |

@@ -118,6 +118,9 @@ export function ItemRow({
   const zoneTintStyle =
     showZoneTint && !item.bought ? styles.itemRowZoneTint(storeZone) : {};
 
+  const showNaItemNameTone =
+    showZoneTint && storeZone === 'na' && item.needed && !item.bought;
+
   return (
     <div
       className='kamra-item-row'
@@ -183,6 +186,7 @@ export function ItemRow({
         <span
           style={{
             ...styles.itemName,
+            ...(showNaItemNameTone ? styles.itemNameZoneNa : {}),
             ...(item.bought ? styles.itemNameBought : {}),
             ...(!item.needed ? styles.itemNameHave : {}),
           }}
@@ -259,6 +263,9 @@ export function ItemRow({
                     style={{
                       ...styles.rowMenuItem,
                       ...(checked ? styles.rowMenuItemChecked : {}),
+                      ...(checked && id === 'na'
+                        ? styles.rowMenuItemNaChecked
+                        : {}),
                     }}
                     onClick={() => handleZonePick(id)}
                   >

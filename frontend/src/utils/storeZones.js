@@ -1,8 +1,9 @@
 export const STORE_ZONES = [
   { id: 'front', label: 'Elöl', order: 0 },
-  { id: 'middle', label: 'Középen', order: 1 },
-  { id: 'back', label: 'Hátul', order: 2 },
-  { id: 'na', label: 'N/A', order: 3 },
+  { id: 'middle_front', label: 'Középen elöl', order: 1 },
+  { id: 'middle_back', label: 'Középen hátul', order: 2 },
+  { id: 'back', label: 'Hátul', order: 3 },
+  { id: 'na', label: 'N/A', order: 4 },
 ];
 
 export const DEFAULT_STORE_ZONE = 'na';
@@ -15,6 +16,7 @@ export function newId() {
 }
 
 export function normalizeStoreZone(value) {
+  if (value === 'middle') return 'middle_front';
   return VALID_STORE_ZONES.has(value) ? value : DEFAULT_STORE_ZONE;
 }
 
@@ -110,8 +112,8 @@ function partitionListSegments(items) {
 
 /**
  * Canonical walk order in items[]:
- * 1. Megvenni active (needed, !bought) — front → middle → back → na
- * 2. Megvenni kosár (needed, bought) — front → middle → back → na
+ * 1. Megvenni active (needed, !bought) — front → middle_front → middle_back → back → na
+ * 2. Megvenni kosár (needed, bought) — same walk order
  * 3. Már megvan (!needed)
  */
 export function ensureListWalkOrder(items) {
