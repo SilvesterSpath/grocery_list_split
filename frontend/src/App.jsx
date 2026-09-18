@@ -11,6 +11,7 @@ import { GroceryListPanel } from './components/GroceryListPanel.jsx';
 import { PresetsPanel } from './components/PresetsPanel.jsx';
 import { StartupSyncModal } from './components/StartupSyncModal.jsx';
 import { defaultLists } from './data/data.js';
+import { getStoreZone } from './lib/itemStoreZoneLookup.js';
 import { globalCSS, styles } from './styles/groceryAppStyles.js';
 import {
   loadTheme,
@@ -116,18 +117,25 @@ export default function GroceryApp() {
     };
   }, [isLoadPresetsOverlayOpen]);
 
+  const handleNewItemNameChange = (value) => {
+    setNewItemName(value);
+    const trimmed = value.trim();
+    if (trimmed !== '') {
+      setSelectedStoreZone(getStoreZone(trimmed));
+    }
+  };
+
   const addItem = () => {
     const name = newItemName.trim();
     if (!name) return;
+    const storeZone = getStoreZone(name);
     setItems((prev) =>
       ensureListWalkOrder(
-        insertItemAtZoneTop(
-          prev,
-          makeItem(name, { storeZone: selectedStoreZone }),
-        ),
+        insertItemAtZoneTop(prev, makeItem(name, { storeZone })),
       ),
     );
     setNewItemName('');
+    setSelectedStoreZone(DEFAULT_STORE_ZONE);
   };
 
   const deleteItem = (id) => {
@@ -375,7 +383,7 @@ export default function GroceryApp() {
           neededItems={neededItems}
           haveItems={haveItems}
           newItemName={newItemName}
-          onNewItemNameChange={setNewItemName}
+          onNewItemNameChange={handleNewItemNameChange}
           onAddItem={addItem}
           selectedStoreZone={selectedStoreZone}
           onSelectedStoreZoneChange={setSelectedStoreZone}
