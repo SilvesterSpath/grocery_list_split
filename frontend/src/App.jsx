@@ -53,6 +53,8 @@ export default function GroceryApp() {
   const [loadedPresetName, setLoadedPresetName] = useState('');
   const [selectedStoreZone, setSelectedStoreZone] =
     useState(DEFAULT_STORE_ZONE);
+  const [isAddZoneManualOverride, setIsAddZoneManualOverride] =
+    useState(false);
   const [dragState, setDragState] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [isHydrating, setIsHydrating] = useState(true);
@@ -117,10 +119,20 @@ export default function GroceryApp() {
     };
   }, [isLoadPresetsOverlayOpen]);
 
+  const handleSelectedStoreZoneChange = (zone) => {
+    setSelectedStoreZone(zone);
+    setIsAddZoneManualOverride(true);
+  };
+
   const handleNewItemNameChange = (value) => {
     setNewItemName(value);
     const trimmed = value.trim();
-    if (trimmed !== '') {
+    if (trimmed === '') {
+      setSelectedStoreZone(DEFAULT_STORE_ZONE);
+      setIsAddZoneManualOverride(false);
+      return;
+    }
+    if (!isAddZoneManualOverride) {
       setSelectedStoreZone(getStoreZone(trimmed));
     }
   };
@@ -128,14 +140,17 @@ export default function GroceryApp() {
   const addItem = () => {
     const name = newItemName.trim();
     if (!name) return;
-    const storeZone = getStoreZone(name);
     setItems((prev) =>
       ensureListWalkOrder(
-        insertItemAtZoneTop(prev, makeItem(name, { storeZone })),
+        insertItemAtZoneTop(
+          prev,
+          makeItem(name, { storeZone: selectedStoreZone }),
+        ),
       ),
     );
     setNewItemName('');
     setSelectedStoreZone(DEFAULT_STORE_ZONE);
+    setIsAddZoneManualOverride(false);
   };
 
   const deleteItem = (id) => {
@@ -386,7 +401,7 @@ export default function GroceryApp() {
           onNewItemNameChange={handleNewItemNameChange}
           onAddItem={addItem}
           selectedStoreZone={selectedStoreZone}
-          onSelectedStoreZoneChange={setSelectedStoreZone}
+          onSelectedStoreZoneChange={handleSelectedStoreZoneChange}
           showSavePreset={showSavePreset}
           onOpenSavePreset={handleOpenSavePreset}
           onOpenPresetOverlay={handleOpenLoadPresetsOverlay}
