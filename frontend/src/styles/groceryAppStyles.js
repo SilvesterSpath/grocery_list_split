@@ -598,10 +598,10 @@ export const styles = {
   },
 
   customCheck: {
-    width: 18,
-    height: 18,
+    width: 27,
+    height: 27,
     border: '1px solid color-mix(in srgb, var(--muted) 45%, var(--border))',
-    borderRadius: 5,
+    borderRadius: 8,
     background: 'var(--surface)',
     display: 'flex',
     alignItems: 'center',
@@ -623,7 +623,7 @@ export const styles = {
 
   checkMark: {
     color: 'var(--text-on-accent)',
-    fontSize: 11,
+    fontSize: 17,
     fontWeight: 700,
     lineHeight: 1,
   },
